@@ -3,6 +3,20 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Visual Studio crap
+*.sln
+*.csproj
+*.config
+*.Debug
+*.Release
+
+# Project directories
+img/
+bin/
+obj/
+packages/
+Properties/
+
 # User-specific files
 *.rsuser
 *.suo
