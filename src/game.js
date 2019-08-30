@@ -6,12 +6,15 @@ var animated;
 var Game = {
 	canvas: 0,
 	keys: [],
+	log_output: "Initializing...",
 
 	frames: 0,
+	fps: 0,
 	seconds: 0,
 
 	timer: 0,
 
+	// Start the game
 	start: function (page_canvas, frame_time) {
 		// Get the graphics context
 		this.canvas = page_canvas;
@@ -52,6 +55,7 @@ var Game = {
 		// Wait for the next draw cycle
 		window.requestAnimationFrame(Game.loop);
 	},
+
 	// Update the game
 	update: function (delta) {
 		if (Game.keys[65]) {
@@ -67,6 +71,7 @@ var Game = {
 			character.y += 32 * delta;
 		}
 	},
+
 	// Draw to the canvas
 	draw: function () {
 		// Clear the canvas
@@ -76,18 +81,38 @@ var Game = {
 		character.draw();
 		animated.animate();
 
+		// Draw log text
+		Game.drawLog();
+
+		// Increment the frame counter
 		Game.frames++;
 	},
+
+	// Add text to the game log
+	log: function (text) {
+		Game.log_output += text;
+	},
+
+	// Draw the log
+	drawLog: function () {
+		Game.context.font = "10px Consolas";
+		Game.context.fillText("FPS  " + Game.fps, 2, 10);
+		Game.context.fillText("TIME " + Game.seconds, 2, 20);
+		Game.context.fillText(Game.log_output, 2, 30);
+	},
+
 	// Measure framerate
 	framerate: function () {
 		Game.seconds++;
-		Game.log_status.innerHTML = "TIME " + Game.seconds + "<br>FPS " + Game.frames;
+		Game.fps = Game.frames;
+		Game.log_output = "";
 		Game.frames = 0;
 	},
 
 	// Key handlers
 	keyPress: function (e) {
 		Game.keys[e.keyCode] = true;
+		Game.log(e.keyCode + " ");
 	},
 	keyRelease: function (e) {
 		Game.keys[e.keyCode] = false;
