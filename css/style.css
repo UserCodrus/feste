@@ -10,7 +10,7 @@ canvas {
 	border: 1px solid #808080;
 	background-color: #d3d3d3;
 
-	width: 60%;
+	width: 640px;
     
 	image-rendering: pixelated;
 	image-rendering: -moz-crisp-edges; /* FireFox */

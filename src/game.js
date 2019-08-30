@@ -6,8 +6,12 @@ var animated;
 var Game = {
 	canvas: 0,
 	keys: [],
+
 	frames: 0,
 	seconds: 0,
+
+	timer: 0,
+
 	start: function (page_canvas, frame_time) {
 		// Get the graphics context
 		this.canvas = page_canvas;
@@ -17,15 +21,16 @@ var Game = {
 		window.addEventListener("keydown", this.keyPress);
 		window.addEventListener("keyup", this.keyRelease);
 
-		// Trigger canvas updates
-		this.interval = setInterval(this.update, frame_time);
-		this.intervalb = setInterval(this.framerate, 1000);
-
+		// Measure framerate
+		this.interval = setInterval(this.framerate, 1000);
 		this.log_status = document.getElementById("status");
 
 		/// Testing stuff ///
 		character = new Sprite(100, 100, 16, 16, 16, 16, 1, "img/guy.png");
 		animated = new Sprite(50, 50, 16, 16, 128, 64, 1, "img/testanim.png");
+
+		// Start the game loop
+		window.requestAnimationFrame(Game.loop);
 	},
 	stop: function () {
 		clearInterval(this.interval);
@@ -33,22 +38,39 @@ var Game = {
 	clear: function () {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	},
-	update: function () {
-		// Clear the canvas
-		Game.clear();
 
+	// The game loop
+	loop: function (timestamp) {
+		// Measure the time change since the last frame
+		let delta = (timestamp - Game.timer) / 1000;
+		Game.timer = timestamp;
+
+		// Update and draw
+		Game.update(delta);
+		Game.draw();
+
+		// Wait for the next draw cycle
+		window.requestAnimationFrame(Game.loop);
+	},
+	// Update the game
+	update: function (delta) {
 		if (Game.keys[65]) {
-			character.x -= 1.5;
+			character.x -= 32 * delta;
 		}
 		if (Game.keys[68]) {
-			character.x += 1.5;
+			character.x += 32 * delta;
 		}
 		if (Game.keys[87]) {
-			character.y -= 1.5;
+			character.y -= 32 * delta;
 		}
 		if (Game.keys[83]) {
-			character.y += 1.5;
+			character.y += 32 * delta;
 		}
+	},
+	// Draw to the canvas
+	draw: function () {
+		// Clear the canvas
+		Game.clear();
 
 		// Draw stuff
 		character.draw();
@@ -56,18 +78,20 @@ var Game = {
 
 		Game.frames++;
 	},
+	// Measure framerate
+	framerate: function () {
+		Game.seconds++;
+		Game.log_status.innerHTML = "TIME " + Game.seconds + "<br>FPS " + Game.frames;
+		Game.frames = 0;
+	},
+
+	// Key handlers
 	keyPress: function (e) {
 		Game.keys[e.keyCode] = true;
 	},
 	keyRelease: function (e) {
 		Game.keys[e.keyCode] = false;
 	},
-
-	framerate: function () {
-		Game.seconds++;
-		Game.log_status.innerHTML = "TIME " + Game.seconds + "<br>FPS " + Game.frames;
-		Game.frames = 0;
-	}
 };
 
 function beginGame() {
