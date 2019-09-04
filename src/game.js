@@ -2,6 +2,11 @@
 
 var character;
 var animated;
+
+var hit;
+var char_box;
+var anim_box;
+
 var background;
 
 var Game = {
@@ -33,6 +38,9 @@ var Game = {
 		character = new Sprite(100, 100, 16, 16, 16, 16, 1, "img/guy.png");
 		animated = new Sprite(50, 50, 16, 16, 128, 64, 1, "img/testanim.png");
 		background = new Sprite(0, 0, 320, 240, 320, 240, 1, "img/back.png");
+		char_box = new BoundingBox(character.x, character.y, character.width, character.height);
+		anim_box = new BoundingBox(animated.x, animated.y, animated.width, animated.height);
+		hit = false;
 
 		// Start the game loop
 		window.requestAnimationFrame(Game.loop);
@@ -60,6 +68,7 @@ var Game = {
 
 	// Update the game
 	update: function (delta) {
+		// Check input
 		if (Game.keys[65]) {
 			character.x -= 32 * delta;
 		}
@@ -71,6 +80,17 @@ var Game = {
 		}
 		if (Game.keys[83]) {
 			character.y += 32 * delta;
+		}
+
+		// Check collision
+		char_box.x = character.x;
+		char_box.y = character.y;
+		if (char_box.boxCollision(anim_box) && !hit) {
+			Game.log("Object hit!");
+			hit = true;
+		}
+		else if (!char_box.boxCollision(anim_box) && hit) {
+			hit = false;
 		}
 	},
 
