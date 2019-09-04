@@ -2,6 +2,7 @@
 
 var character;
 var animated;
+var background;
 
 var Game = {
 	canvas: 0,
@@ -31,6 +32,7 @@ var Game = {
 		/// Testing stuff ///
 		character = new Sprite(100, 100, 16, 16, 16, 16, 1, "img/guy.png");
 		animated = new Sprite(50, 50, 16, 16, 128, 64, 1, "img/testanim.png");
+		background = new Sprite(0, 0, 320, 240, 320, 240, 1, "img/back.png");
 
 		// Start the game loop
 		window.requestAnimationFrame(Game.loop);
@@ -78,6 +80,7 @@ var Game = {
 		Game.clear();
 
 		// Draw stuff
+		background.draw();
 		character.draw();
 		animated.animate();
 
@@ -112,7 +115,6 @@ var Game = {
 	// Key handlers
 	keyPress: function (e) {
 		Game.keys[e.keyCode] = true;
-		Game.log(e.keyCode + " ");
 	},
 	keyRelease: function (e) {
 		Game.keys[e.keyCode] = false;
