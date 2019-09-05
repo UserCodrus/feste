@@ -32,8 +32,10 @@ var Game = {
 		this.log_status = document.getElementById("status");
 
 		/// Testing stuff ///
+		// Test backgrounds
 		this.background.push(new Sprite(0, 0, 320, 240, 320, 240, 1, "img/back.png"));
 
+		// Test static collision
 		let animate = new Static(50, 50, new Sprite(0, 0, 16, 16, 128, 64, 1, "img/testanim.png"), new BoundingBox(0, 0, 16, 16));
 		animate.sprite.animated = true;
 		this.static.push(animate);
@@ -42,8 +44,14 @@ var Game = {
 		this.static.push(new Static(320, 0, 0, new BoundingBox(0, 0, 10, 240)));
 		this.static.push(new Static(-10, 0, 0, new BoundingBox(0, 0, 10, 240)));
 
+		// Test character callbacks
 		character = new Entity(100, 100, new Sprite(0, 0, 16, 16, 16, 16, 1, "img/guy.png"), new BoundingBox(0, 0, 16, 16));
+		character.onFrameUpdate = movement;
+		character.onCollision = function (object) {
+			Game.log("bonk at " + object.x + ", " + object.y);
+		};
 		this.entity.push(character);
+		/// End Tests ///
 
 		// Start the game loop
 		window.requestAnimationFrame(Game.loop);
@@ -71,29 +79,7 @@ var Game = {
 
 	// Update the game
 	update: function (delta) {
-		let speed = 32 * delta;
-
-		// Check input
-		if (Game.keys[65]) {
-			character.x_velocity = -speed;
-		}
-		else if (Game.keys[68]) {
-			character.x_velocity = speed;
-		}
-		else {
-			character.x_velocity = 0;
-		}
-		if (Game.keys[87]) {
-			character.y_velocity = -speed;
-		}
-		else if (Game.keys[83]) {
-			character.y_velocity = speed;
-		}
-		else {
-			character.y_velocity = 0;
-		}
-
-		// Update all entities
+		// Update entities
 		let obj;
 		for (obj of Game.entity) {
 			obj.update(delta);
@@ -174,3 +160,28 @@ function beginGame() {
 	// Start the game
 	Game.start(canvas, 5);
 };
+
+function movement(delta) {
+	let speed = 32 * delta;
+
+	// Horizontal movement
+	if (Game.keys[65]) {
+		this.x_velocity = -speed;
+	}
+	else if (Game.keys[68]) {
+		this.x_velocity = speed;
+	}
+	else {
+		this.x_velocity = 0;
+	}
+	// Vertical movement
+	if (Game.keys[87]) {
+		this.y_velocity = -speed;
+	}
+	else if (Game.keys[83]) {
+		this.y_velocity = speed;
+	}
+	else {
+		this.y_velocity = 0;
+	}
+}
