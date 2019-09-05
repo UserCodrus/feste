@@ -1,13 +1,6 @@
 ﻿"use strict";
 
 var character;
-var animated;
-
-var hit;
-var char_box;
-var anim_box;
-
-var background;
 
 var Game = {
 	canvas: 0,
@@ -20,7 +13,9 @@ var Game = {
 
 	timer: 0,
 
-	collision: [],
+	background: [],
+	static: [],
+	entity: [],
 
 	// Start the game
 	start: function (page_canvas, frame_time) {
@@ -37,18 +32,18 @@ var Game = {
 		this.log_status = document.getElementById("status");
 
 		/// Testing stuff ///
-		character = new Sprite(100, 100, 16, 16, 16, 16, 1, "img/guy.png");
-		animated = new Sprite(50, 50, 16, 16, 128, 64, 1, "img/testanim.png");
-		background = new Sprite(0, 0, 320, 240, 320, 240, 1, "img/back.png");
-		char_box = new BoundingBox(character.x + 4, character.y, character.width - 5, character.height);
+		this.background.push(new Sprite(0, 0, 320, 240, 320, 240, 1, "img/back.png"));
 
-		this.collision.push(char_box);
-		this.collision.push(new BoundingBox(animated.x, animated.y, animated.width, animated.height));
-		this.collision.push(new BoundingBox(0, 240, 320, 340));
-		this.collision.push(new BoundingBox(0, -100, 320, 100));
-		this.collision.push(new BoundingBox(-100, 0, 100, 240));
-		this.collision.push(new BoundingBox(320, 0, 420, 240));
-		hit = false;
+		let animate = new Static(50, 50, new Sprite(0, 0, 16, 16, 128, 64, 1, "img/testanim.png"), new BoundingBox(0, 0, 16, 16));
+		animate.sprite.animated = true;
+		this.static.push(animate);
+		this.static.push(new Static (0, 240, 0, new BoundingBox(0, 0, 320, 10)));
+		this.static.push(new Static(0, -10, 0, new BoundingBox(0, 0, 320, 10)));
+		this.static.push(new Static(320, 0, 0, new BoundingBox(0, 0, 10, 240)));
+		this.static.push(new Static(-10, 0, 0, new BoundingBox(0, 0, 10, 240)));
+
+		character = new Entity(100, 100, new Sprite(0, 0, 16, 16, 16, 16, 1, "img/guy.png"), new BoundingBox(0, 0, 16, 16));
+		this.entity.push(character);
 
 		// Start the game loop
 		window.requestAnimationFrame(Game.loop);
@@ -78,52 +73,30 @@ var Game = {
 	update: function (delta) {
 		let speed = 32 * delta;
 
-		let x_velocity = 0;
-		let y_velocity = 0;
-
 		// Check input
 		if (Game.keys[65]) {
-			x_velocity = -speed;
+			character.x_velocity = -speed;
 		}
-		if (Game.keys[68]) {
-			x_velocity = speed;
+		else if (Game.keys[68]) {
+			character.x_velocity = speed;
+		}
+		else {
+			character.x_velocity = 0;
 		}
 		if (Game.keys[87]) {
-			y_velocity = -speed;
+			character.y_velocity = -speed;
 		}
-		if (Game.keys[83]) {
-			y_velocity = speed;
+		else if (Game.keys[83]) {
+			character.y_velocity = speed;
+		}
+		else {
+			character.y_velocity = 0;
 		}
 
-		char_box.x = character.x + 3;
-		char_box.y = character.y;
-
-		// Detect collisions
-		let box = 0;
-		let x_collide = false;
-		let y_collide = false;
-		// X Axis
-		for (box of Game.collision) {
-			if (box != char_box) {
-				if (char_box.boxCollision(box, x_velocity, 0)) {
-					x_collide = true;
-				}
-			}
-		}
-		// Y Axis
-		for (box of Game.collision) {
-			if (box != char_box) {
-				if (char_box.boxCollision(box, 0, y_velocity)) {
-					y_collide = true;
-				}
-			}
-		}
-		// Move the character
-		if (!x_collide) {
-			character.x += x_velocity;
-		}
-		if (!y_collide) {
-			character.y += y_velocity;
+		// Update all entities
+		let obj;
+		for (obj of Game.entity) {
+			obj.update(delta);
 		}
 	},
 
@@ -133,9 +106,26 @@ var Game = {
 		Game.clear();
 
 		// Draw stuff
-		background.draw();
-		character.draw();
-		animated.animate();
+		let bg;
+		for (bg of Game.background) {
+			bg.draw();
+		}
+
+		// Draw statics and entities
+		let obj;
+		for (obj of Game.static) {
+			if (obj.sprite) {
+				if (obj.sprite.animated) {
+					obj.sprite.animate();
+				}
+				else {
+					obj.sprite.draw();
+				}
+			}
+		}
+		for (obj of Game.entity) {
+			obj.sprite.draw();
+		}
 
 		// Draw log text
 		Game.drawLog();
@@ -154,7 +144,8 @@ var Game = {
 		Game.context.font = "10px Consolas";
 		Game.context.fillText("FPS  " + Game.fps, 2, 10);
 		Game.context.fillText("TIME " + Game.seconds, 2, 20);
-		Game.context.fillText(Game.log_output, 2, 30);
+		Game.context.fillText("COORD " + Math.round(character.x) + ", " + Math.round(character.y), 2, 30);
+		Game.context.fillText(Game.log_output, 2, 40);
 	},
 
 	// Measure framerate
