@@ -8,14 +8,14 @@ function Static(x, y, sprite, collision) {
 	// Set the sprite
 	if (sprite) {
 		this.sprite = sprite;
-		this.sprite.x = this.x + this.sprite.offset_x;
-		this.sprite.y = this.y + this.sprite.offset_y;
+		this.sprite.x = this.x;
+		this.sprite.y = this.y;
 	}
 
 	// Set the collision box
 	this.collision = collision;
-	this.collision.x = this.x + this.collision.offset_x;
-	this.collision.y = this.y + this.collision.offset_y;
+	this.collision.x = this.x;
+	this.collision.y = this.y;
 };
 
 // A mobile object with physics
@@ -52,10 +52,8 @@ Entity.prototype.update = function (delta) {
 	this.onFrameUpdate(delta);
 
 	// Update the position of the collision box and sprite
-	this.sprite.x = this.x + this.sprite.offset_x;
-	this.sprite.y = this.y + this.sprite.offset_y;
-	this.collision.x = this.x + this.collision.offset_x;
-	this.collision.y = this.y + this.collision.offset_y;
+	this.collision.x = this.x;
+	this.collision.y = this.y;
 
 	// Detect collisions
 	let x_collide = false;

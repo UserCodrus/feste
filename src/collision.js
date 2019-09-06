@@ -1,13 +1,11 @@
 ﻿"use strict";
 
-function BoundingBox(x, y, width, height, offset_x = 0, offset_y = 0) {
+function BoundingBox(width, height) {
 	// Box attributes
-	this.x = x;
-	this.y = y;
+	this.x = 0;
+	this.y = 0;
 	this.width = width;
 	this.height = height;
-	this.offset_x = offset_x;
-	this.offset_y = offset_y;
 };
 
 // Detect collision with another box

@@ -34,19 +34,18 @@ var Game = {
 
 		/// Testing stuff ///
 		// Test backgrounds
-		this.background.push(new Sprite(0, 0, 320, 240, 320, 240, 1, "img/back.png"));
+		this.background.push(new Sprite("img/back.png", 320, 240));
 
 		// Test static collision
-		let animate = new Static(50, 50, new Sprite(0, 0, 16, 16, 128, 64, 1, "img/testanim.png"), new BoundingBox(0, 0, 16, 16));
-		animate.sprite.animated = true;
+		let animate = new Static(50, 50, new SpriteSheet("img/testanim.png", 16, 16, 128, 16), new BoundingBox(16, 16));
 		this.static.push(animate);
-		this.static.push(new Static (0, 240, 0, new BoundingBox(0, 0, 320, 10)));
-		this.static.push(new Static(0, -10, 0, new BoundingBox(0, 0, 320, 10)));
-		this.static.push(new Static(320, 0, 0, new BoundingBox(0, 0, 10, 240)));
-		this.static.push(new Static(-10, 0, 0, new BoundingBox(0, 0, 10, 240)));
+		this.static.push(new Static(0, 240, 0, new BoundingBox(320, 10)));
+		this.static.push(new Static(0, -10, 0, new BoundingBox(320, 10)));
+		this.static.push(new Static(320, 0, 0, new BoundingBox(10, 240)));
+		this.static.push(new Static(-10, 0, 0, new BoundingBox(10, 240)));
 
 		// Test character callbacks
-		character = new Entity(100, 100, new Sprite(-8, -8, 16, 16, 16, 16, 1, "img/guy.png"), new BoundingBox(0, 0, 16, 16, -8, -8));
+		character = new Entity(100, 100, new Sprite("img/guy.png", 16, 16), new BoundingBox(16, 16));
 		character.onFrameUpdate = movement;
 		character.onCollision = function (object) {
 			Game.log("bonk at " + object.x + ", " + object.y);
@@ -95,7 +94,7 @@ var Game = {
 		// Draw stuff
 		let bg;
 		for (bg of Game.background) {
-			bg.draw();
+			bg.draw(0, 0);
 		}
 
 		// Draw statics and entities
@@ -105,12 +104,7 @@ var Game = {
 		for (obj of Game.static) {
 			// Draw sprites
 			if (obj.sprite) {
-				if (obj.sprite.animated) {
-					obj.sprite.animate();
-				}
-				else {
-					obj.sprite.draw();
-				}
+				obj.sprite.draw(obj.x, obj.y, 0);
 			}
 
 			// Draw bounding boxes if enabled
@@ -122,7 +116,7 @@ var Game = {
 		}
 		for (obj of Game.entity) {
 			// Draw sprites
-			obj.sprite.draw();
+			obj.sprite.draw(obj.x, obj.y);
 
 			// Draw bounding boxes if enabled
 			if (this.draw_collision) {
