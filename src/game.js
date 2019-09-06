@@ -162,23 +162,27 @@ function beginGame() {
 };
 
 function movement(delta) {
+	// Set speed
 	let speed = 32 * delta;
+	if (Game.keys[Keyboard.key_shift]) {
+		speed *= 2;
+	}
 
 	// Horizontal movement
-	if (Game.keys[65]) {
+	if (Game.keys[Keyboard.key_a]) {
 		this.x_velocity = -speed;
 	}
-	else if (Game.keys[68]) {
+	else if (Game.keys[Keyboard.key_d]) {
 		this.x_velocity = speed;
 	}
 	else {
 		this.x_velocity = 0;
 	}
 	// Vertical movement
-	if (Game.keys[87]) {
+	if (Game.keys[Keyboard.key_w]) {
 		this.y_velocity = -speed;
 	}
-	else if (Game.keys[83]) {
+	else if (Game.keys[Keyboard.key_s]) {
 		this.y_velocity = speed;
 	}
 	else {
