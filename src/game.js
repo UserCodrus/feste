@@ -12,6 +12,7 @@ var Game = {
 	seconds: 0,
 
 	timer: 0,
+	draw_collision: true,
 
 	background: [],
 	static: [],
@@ -45,7 +46,7 @@ var Game = {
 		this.static.push(new Static(-10, 0, 0, new BoundingBox(0, 0, 10, 240)));
 
 		// Test character callbacks
-		character = new Entity(100, 100, new Sprite(0, 0, 16, 16, 16, 16, 1, "img/guy.png"), new BoundingBox(0, 0, 16, 16));
+		character = new Entity(100, 100, new Sprite(-8, -8, 16, 16, 16, 16, 1, "img/guy.png"), new BoundingBox(0, 0, 16, 16, -8, -8));
 		character.onFrameUpdate = movement;
 		character.onCollision = function (object) {
 			Game.log("bonk at " + object.x + ", " + object.y);
@@ -98,8 +99,11 @@ var Game = {
 		}
 
 		// Draw statics and entities
+		this.context.strokeStyle = "#FFFFFF";
+		this.context.lineWidth = 1;
 		let obj;
 		for (obj of Game.static) {
+			// Draw sprites
 			if (obj.sprite) {
 				if (obj.sprite.animated) {
 					obj.sprite.animate();
@@ -108,9 +112,24 @@ var Game = {
 					obj.sprite.draw();
 				}
 			}
+
+			// Draw bounding boxes if enabled
+			if (this.draw_collision) {
+				this.context.globalAlpha = 0.5;
+				this.context.strokeRect(obj.collision.x, obj.collision.y, obj.collision.width, obj.collision.height);
+				this.context.globalAlpha = 1;
+			}
 		}
 		for (obj of Game.entity) {
+			// Draw sprites
 			obj.sprite.draw();
+
+			// Draw bounding boxes if enabled
+			if (this.draw_collision) {
+				this.context.globalAlpha = 0.5;
+				this.context.strokeRect(obj.collision.x, obj.collision.y, obj.collision.width, obj.collision.height);
+				this.context.globalAlpha = 1;
+			}
 		}
 
 		// Draw log text

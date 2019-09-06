@@ -36,6 +36,16 @@ Entity.prototype.onCollision = function (object) {
 
 }
 
+Entity.prototype.checkCollision = function (x_offset, y_offset) {
+	let obj;
+	for (obj of Game.static) {
+		if (this.collision.boxCollision(obj.collision, x_offset, y_offset)) {
+			return obj;
+		}
+	}
+	return null;
+}
+
 // The main update function
 Entity.prototype.update = function (delta) {
 	// Call the frame update callback
@@ -48,22 +58,19 @@ Entity.prototype.update = function (delta) {
 	this.collision.y = this.y + this.collision.offset_y;
 
 	// Detect collisions
-	let obj = 0;
 	let x_collide = false;
 	let y_collide = false;
 	// X Axis
-	for (obj of Game.static) {
-		if (this.collision.boxCollision(obj.collision, this.x_velocity, 0)) {
-			x_collide = true;
-			this.onCollision(obj);
-		}
+	let obj = this.checkCollision(this.x_velocity, 0);
+	if (obj) {
+		x_collide = true;
+		this.onCollision(obj);
 	}
 	// Y Axis
-	for (obj of Game.static) {
-		if (this.collision.boxCollision(obj.collision, 0, this.y_velocity)) {
-			y_collide = true;
-			this.onCollision(obj);
-		}
+	obj = this.checkCollision(0, this.y_velocity);
+	if (obj) {
+		y_collide = true;
+		this.onCollision(obj);
 	}
 
 	// Move the entity
