@@ -12,6 +12,7 @@
 
 # Project directories
 img/
+data/
 bin/
 obj/
 packages/

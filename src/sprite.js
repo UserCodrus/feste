@@ -1,5 +1,7 @@
 ﻿"use strict";
 
+var Graphics;
+
 function Sprite(file, sprite_width, sprite_height) {
 	// Set the image
 	this.image = new Image();
@@ -31,3 +33,20 @@ SpriteSheet.prototype.draw = function (x, y, index) {
 	// Draw a subimage from the sprite
 	Game.context.drawImage(this.image, subimage_x, subimage_y, this.width, this.height, x, y, this.width, this.height);
 };
+
+function loadSprites() {
+	// Load the sprite data file
+	$.getJSON("data/sprite.json", function (json) {
+		Graphics = json;
+
+		// Load sprite data
+		let obj;
+		for (obj of Graphics.sprites) {
+			obj.image = new Image();
+			obj.image.src = Graphics.location + obj.file;
+		}
+
+		console.log("Sprite list loaded");
+		console.log(Graphics);
+	});
+}
