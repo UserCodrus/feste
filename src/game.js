@@ -7,8 +7,6 @@ var Game = {
 	keys: [],
 
 	timer: 0,
-	show_collision: true,
-	show_debug: true,
 
 	frames: 0,
 	fps: 0,
@@ -21,17 +19,17 @@ var Game = {
 	// Start the game
 	start: function (page_canvas, frame_time) {
 		// Get the graphics context
-		this.canvas = page_canvas;
-		this.context = this.canvas.getContext("2d");
-		Graphics.context = this.canvas.getContext("2d");
+		Graphics.canvas = page_canvas;
+		Graphics.context = Graphics.canvas.getContext("2d");
 
 		// Catch key presses
 		window.addEventListener("keydown", this.keyPress);
 		window.addEventListener("keyup", this.keyRelease);
 
 		// Measure framerate
-		this.interval = setInterval(this.framerate, 1000);
-		this.log_status = document.getElementById("status");
+		//this.interval = setInterval(this.framerate, 1000);
+		Graphics.showFPS(true);
+		//this.log_status = document.getElementById("status");
 
 		/// Testing stuff ///
 		// Test backgrounds
@@ -40,10 +38,10 @@ var Game = {
 		// Test static collision
 		let animate = new Static(50, 50, "box", new BoundingBox(16, 16));
 		this.static.push(animate);
-		this.static.push(new Static(0, 240, 0, new BoundingBox(320, 10)));
-		this.static.push(new Static(0, -10, 0, new BoundingBox(320, 10)));
-		this.static.push(new Static(320, 0, 0, new BoundingBox(10, 240)));
-		this.static.push(new Static(-10, 0, 0, new BoundingBox(10, 240)));
+		this.static.push(new Static(0, 240, null, new BoundingBox(320, 10)));
+		this.static.push(new Static(0, -10, null, new BoundingBox(320, 10)));
+		this.static.push(new Static(320, 0, null, new BoundingBox(10, 240)));
+		this.static.push(new Static(-10, 0, null, new BoundingBox(10, 240)));
 
 		// Test character callbacks
 		character = new Entity(100, 100, "guy", new BoundingBox(16, 16));
@@ -57,9 +55,6 @@ var Game = {
 	stop: function () {
 		clearInterval(this.interval);
 	},
-	clear: function () {
-		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	},
 
 	// The game loop
 	loop: function (timestamp) {
@@ -69,7 +64,8 @@ var Game = {
 
 		// Update and draw
 		Game.update(delta);
-		Game.draw();
+		//Game.draw();
+		Graphics.render();
 
 		// Wait for the next draw cycle
 		window.requestAnimationFrame(Game.loop);
@@ -82,66 +78,6 @@ var Game = {
 		for (obj of Game.entity) {
 			obj.update(delta);
 		}
-	},
-
-	// Draw to the canvas
-	draw: function () {
-		// Clear the canvas
-		Game.clear();
-
-		// Draw stuff
-		let bg;
-		for (bg of Game.background) {
-			Graphics.draw(bg, 0, 0);
-		}
-
-		// Draw statics and entities
-		this.context.strokeStyle = "#FFFFFF";
-		this.context.lineWidth = 1;
-		let obj;
-		for (obj of Game.static) {
-			// Draw sprites
-			if (obj.sprite) {
-				Graphics.draw(obj.sprite, obj.x, obj.y);
-			}
-
-			// Draw bounding boxes if enabled
-			if (this.show_collision) {
-				this.context.globalAlpha = 0.5;
-				this.context.strokeRect(obj.collision.x, obj.collision.y, obj.collision.width, obj.collision.height);
-				this.context.globalAlpha = 1;
-			}
-		}
-		for (obj of Game.entity) {
-			// Draw sprites
-			Graphics.draw(obj.sprite, obj.x, obj.y);
-
-			// Draw bounding boxes if enabled
-			if (this.show_collision) {
-				this.context.globalAlpha = 0.5;
-				this.context.strokeRect(obj.collision.x, obj.collision.y, obj.collision.width, obj.collision.height);
-				this.context.globalAlpha = 1;
-			}
-		}
-
-		// Draw debug text
-		if (this.show_debug) {
-			Game.context.font = "10px Consolas";
-			Game.context.fillText("FPS  " + Game.fps, 2, 10);
-			Game.context.fillText("TIME " + Game.seconds, 2, 20);
-			Game.context.fillText("COORD " + Math.round(character.x) + ", " + Math.round(character.y), 2, 30);
-		}
-
-		// Increment the frame counter
-		Game.frames++;
-	},
-
-	// Measure framerate
-	framerate: function () {
-		Game.seconds++;
-		Game.fps = Game.frames;
-		Game.log_output = "";
-		Game.frames = 0;
 	},
 
 	// Key handlers
