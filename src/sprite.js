@@ -1,52 +1,47 @@
 ﻿"use strict";
 
-var Graphics;
+var Graphics = {
+	location: "",
+	sprites: null,
+	context: null,
 
-function Sprite(file, sprite_width, sprite_height) {
-	// Set the image
-	this.image = new Image();
-	this.image.src = file;
-
-	// Set the size and location
-	this.width = sprite_width;
-	this.height = sprite_height;
-};
-
-function SpriteSheet(file, sprite_width, sprite_height, sheet_width, sheet_height) {
-	Sprite.call(this, file, sprite_width, sprite_height);
-
-	this.cell_width = Math.floor(sheet_width / sprite_width);
-	this.cell_height = Math.floor(sheet_height / sprite_height);
-}
-
-// Draw the full image
-Sprite.prototype.draw = function (x, y) {
-	// Draw the sprite
-	Game.context.drawImage(this.image, Math.round(x), Math.round(y), this.width, this.height);
-};
-
-// Draw a subimage from a sprite sheet
-SpriteSheet.prototype.draw = function (x, y, index) {
-	let subimage_y = Math.floor(index / this.cell_width);
-	let subimage_x = index - subimage_y * this.cell_width;
-	
-	// Draw a subimage from the sprite
-	Game.context.drawImage(this.image, subimage_x, subimage_y, this.width, this.height, x, y, this.width, this.height);
-};
-
-function loadSprites() {
-	// Load the sprite data file
-	$.getJSON("data/sprite.json", function (json) {
-		Graphics = json;
-
-		// Load sprite data
-		let obj;
-		for (obj of Graphics.sprites) {
-			obj.image = new Image();
-			obj.image.src = Graphics.location + obj.file;
+	// Get a sprite with a given id
+	getSprite: function (id) {
+		if (this.sprites) {
+			let obj;
+			for (obj of this.sprites) {
+				if (obj.id == id) {
+					return obj;
+				}
+			}
+		} else {
+			return null;
 		}
+	},
+	// Draw a sprite
+	draw: function (sprite, x, y, animation) {
+		if (animation) {
+			Game.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);
+		} else {
+			Game.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
+		}
+	}
+};
 
-		console.log("Sprite list loaded");
-		console.log(Graphics);
-	});
+// A sprite entry in the graphics.json data file
+function Sprite(id, filename, width, height) {
+	this.id = id;
+	this.file = filename;
+	this.type = "sprite";
+	this.width = width;
+	this.height = height;
+}
+// A background entry in the graphics.json data file
+function Background(id, filename, width, height, parallax) {
+	this.id = id;
+	this.file = filename;
+	this.type = "background";
+	this.width = width;
+	this.height = height;
+	this.parallax = parallax;
 }

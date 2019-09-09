@@ -23,6 +23,7 @@ var Game = {
 		// Get the graphics context
 		this.canvas = page_canvas;
 		this.context = this.canvas.getContext("2d");
+		Graphics.context = this.canvas.getContext("2d");
 
 		// Catch key presses
 		window.addEventListener("keydown", this.keyPress);
@@ -34,10 +35,10 @@ var Game = {
 
 		/// Testing stuff ///
 		// Test backgrounds
-		this.background.push(new Sprite("img/back.png", 320, 240));
+		this.background.push(Graphics.getSprite("back"));
 
 		// Test static collision
-		let animate = new Static(50, 50, new SpriteSheet("img/testanim.png", 16, 16, 128, 16), new BoundingBox(16, 16));
+		let animate = new Static(50, 50, "box", new BoundingBox(16, 16));
 		this.static.push(animate);
 		this.static.push(new Static(0, 240, 0, new BoundingBox(320, 10)));
 		this.static.push(new Static(0, -10, 0, new BoundingBox(320, 10)));
@@ -45,7 +46,7 @@ var Game = {
 		this.static.push(new Static(-10, 0, 0, new BoundingBox(10, 240)));
 
 		// Test character callbacks
-		character = new Entity(100, 100, new Sprite("img/guy.png", 16, 16), new BoundingBox(16, 16));
+		character = new Entity(100, 100, "guy", new BoundingBox(16, 16));
 		character.onFrameUpdate = movement;
 		this.entity.push(character);
 		/// End Tests ///
@@ -91,7 +92,7 @@ var Game = {
 		// Draw stuff
 		let bg;
 		for (bg of Game.background) {
-			bg.draw(0, 0);
+			Graphics.draw(bg, 0, 0);
 		}
 
 		// Draw statics and entities
@@ -101,7 +102,7 @@ var Game = {
 		for (obj of Game.static) {
 			// Draw sprites
 			if (obj.sprite) {
-				obj.sprite.draw(obj.x, obj.y, 0);
+				Graphics.draw(obj.sprite, obj.x, obj.y);
 			}
 
 			// Draw bounding boxes if enabled
@@ -113,7 +114,7 @@ var Game = {
 		}
 		for (obj of Game.entity) {
 			// Draw sprites
-			obj.sprite.draw(obj.x, obj.y);
+			Graphics.draw(obj.sprite, obj.x, obj.y);
 
 			// Draw bounding boxes if enabled
 			if (this.show_collision) {
@@ -159,10 +160,23 @@ function beginGame() {
 	canvas.height = 240;
 
 	// Load graphics data
-	loadSprites();
+	$.getJSON("data/graphics.json", function (json) {
+		Graphics.sprites = json.sprites;
+		Graphics.location = json.location;
 
-	// Start the game
-	Game.start(canvas, 5);
+		// Load sprite data
+		let obj;
+		for (obj of Graphics.sprites) {
+			obj.image = new Image();
+			obj.image.src = Graphics.location + obj.file;
+		}
+
+		console.log("Sprite list loaded");
+		console.log(Graphics);
+
+		// Start the game
+		Game.start(canvas, 5);;
+	});
 };
 
 function movement(delta) {

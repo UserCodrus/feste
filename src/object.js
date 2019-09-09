@@ -1,15 +1,13 @@
 ﻿"use strict";
 
 // An immobile object
-function Static(x, y, sprite, collision) {
+function Static(x, y, sprite_id, collision) {
 	this.x = x;
 	this.y = y;
 
 	// Set the sprite
-	if (sprite) {
-		this.sprite = sprite;
-		this.sprite.x = this.x;
-		this.sprite.y = this.y;
+	if (sprite_id) {
+		this.sprite = Graphics.getSprite(sprite_id);
 	}
 
 	// Set the collision box
@@ -19,8 +17,8 @@ function Static(x, y, sprite, collision) {
 };
 
 // A mobile object with physics
-function Entity(x, y, sprite, collision) {
-	Static.call(this, x, y, sprite, collision);
+function Entity(x, y, sprite_id, collision) {
+	Static.call(this, x, y, sprite_id, collision);
 
 	this.x_velocity = 0;
 	this.y_velocity = 0;
