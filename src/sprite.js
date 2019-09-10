@@ -57,7 +57,7 @@ var Graphics = {
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision) {
 				Graphics.context.globalAlpha = 0.5;
-				Graphics.context.strokeRect(obj.collision.x, obj.collision.y, obj.collision.width, obj.collision.height);
+				Graphics.context.strokeRect(obj.hitbox.x, obj.hitbox.y, obj.hitbox.width, obj.hitbox.height);
 				Graphics.context.globalAlpha = 1;
 			}
 		}
@@ -68,7 +68,7 @@ var Graphics = {
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision) {
 				Graphics.context.globalAlpha = 0.5;
-				Graphics.context.strokeRect(obj.collision.x, obj.collision.y, obj.collision.width, obj.collision.height);
+				Graphics.context.strokeRect(obj.hitbox.x, obj.hitbox.y, obj.hitbox.width, obj.hitbox.height);
 				Graphics.context.globalAlpha = 1;
 			}
 		}
