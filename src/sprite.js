@@ -19,6 +19,9 @@ var Graphics = {
 	frames: 0,
 	fps: 0,
 
+	// The framerate of sprites
+	sprite_fps: 6,
+
 	// Get a sprite with a given id from the sprite data array
 	getSprite: function (id) {
 		if (this.sprites) {

@@ -50,14 +50,16 @@ var Game = {
 		let delta = (timestamp - Game.timer) / 1000;
 		Game.timer = timestamp;
 
-		// Update entities
-		let obj;
-		for (obj of Game.entity) {
-			obj.update(delta);
-		}
+		if (delta) {
+			// Update entities
+			let obj;
+			for (obj of Game.entity) {
+				obj.update(delta);
+			}
 
-		// Draw a frame
-		Graphics.render();
+			// Draw a frame
+			Graphics.render();
+		}
 
 		// Wait for the next draw cycle
 		window.requestAnimationFrame(Game.loop);

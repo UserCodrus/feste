@@ -27,6 +27,7 @@ var Entity = function (x, y, sprite_id, collision) {
 	this.animation = {
 		set: null,
 		speed: 1,
+		frametime: 0,
 		index: 0,
 		x: 0,
 		y: 0
@@ -65,11 +66,20 @@ Entity.prototype.update = function (delta) {
 
 	// Advance the animation
 	if (this.animation.set) {
-		this.animation.index++;
-		if (this.animation.index > this.animation.set.end) {
-			this.animation.index = this.animation.set.start;
+		// Advance the frame timer
+		this.animation.frametime += delta * this.animation.speed;
+
+		// Cycle to the next frame
+		if (this.animation.frametime > (1 / Graphics.sprite_fps)) {
+			this.animation.frametime -= 1 / Graphics.sprite_fps;
+
+			this.animation.index++;
+			if (this.animation.index > this.animation.set.end) {
+				this.animation.index = this.animation.set.start;
+			}
+
+			this.getSubimage();
 		}
-		this.getSubimage();
 	}
 
 	// Detect collisions
@@ -108,6 +118,7 @@ Entity.prototype.setAnimation = function (animation_id) {
 					// Set the animation data
 					this.animation.set = obj;
 					this.animation.index = this.animation.set.start;
+					this.animation.frametime = 0.0;
 					this.getSubimage();
 
 					return;
