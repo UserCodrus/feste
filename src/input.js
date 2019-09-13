@@ -1,4 +1,6 @@
-﻿var Input = {
+﻿"use strict";
+
+var Input = {
 	// Key states
 	keys: [],
 

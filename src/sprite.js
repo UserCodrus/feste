@@ -41,7 +41,7 @@ var Graphics = {
 		// Draw backgrounds
 		let bg;
 		for (bg of Game.background) {
-			Graphics.draw(bg, 0, 0);
+			Graphics.draw(bg, null, 0, 0);
 		}
 
 		// Draw objects
@@ -51,7 +51,7 @@ var Graphics = {
 		for (obj of Game.static) {
 			// Draw static sprites
 			if (obj.sprite) {
-				Graphics.draw(obj.sprite, obj.x, obj.y);
+				Graphics.draw(obj.sprite, null, obj.x, obj.y);
 			}
 
 			// Draw bounding boxes if enabled
@@ -63,7 +63,7 @@ var Graphics = {
 		}
 		for (obj of Game.entity) {
 			// Draw entity sprites
-			Graphics.draw(obj.sprite, obj.x, obj.y);
+			Graphics.draw(obj.sprite, obj.animation, obj.x, obj.y);
 
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision) {
@@ -84,12 +84,14 @@ var Graphics = {
 	},
 
 	// Draw a sprite
-	draw: function (sprite, x, y, animation) {
+	draw: function (sprite, animation, x, y) {
 		if (animation) {
-			Graphics.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);
-		} else {
-			Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
+			if (animation.set) {
+				Graphics.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);
+				return;
+			}
 		}
+		Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
 	},
 
 	// Measure framerate

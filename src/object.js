@@ -22,6 +22,15 @@ var Entity = function (x, y, sprite_id, collision) {
 
 	this.x_velocity = 0;
 	this.y_velocity = 0;
+
+	// The animation data for this object's sprite
+	this.animation = {
+		set: null,
+		speed: 1,
+		index: 0,
+		x: 0,
+		y: 0
+	}
 };
 
 // Called every frame when the object updates
@@ -50,9 +59,18 @@ Entity.prototype.update = function (delta) {
 	// Call the frame update callback
 	this.onFrameUpdate(delta);
 
-	// Update the position of the collision box and sprite
+	// Update the position of the collision box
 	this.hitbox.x = this.x;
 	this.hitbox.y = this.y;
+
+	// Advance the animation
+	if (this.animation.set) {
+		this.animation.index++;
+		if (this.animation.index > this.animation.set.end) {
+			this.animation.index = this.animation.set.start;
+		}
+		this.getSubimage();
+	}
 
 	// Detect collisions
 	let x_collide = false;
@@ -78,3 +96,34 @@ Entity.prototype.update = function (delta) {
 		this.y += this.y_velocity;
 	}
 };
+
+// Change the current animation
+Entity.prototype.setAnimation = function (animation_id) {
+	if (animation_id != null) {
+		if (this.sprite.animation && this.sprite.sheet) {
+			// Find an animation matching the provided id
+			let obj;
+			for (obj of this.sprite.animation) {
+				if (obj.name == animation_id) {
+					// Set the animation data
+					this.animation.set = obj;
+					this.animation.index = this.animation.set.start;
+					this.getSubimage();
+
+					return;
+				}
+			}
+		}
+	}
+}
+
+// Get the coordinates of the current subimage of the sprite
+Entity.prototype.getSubimage = function () {
+	// Get the cell containing the current subimage
+	let cy = Math.floor(this.animation.index / this.sprite.sheet.width);
+	let cx = this.animation.index - (this.sprite.sheet.width * cy);
+
+	// Get the coordinates of the subimage
+	this.animation.y = cy * this.sprite.height;
+	this.animation.x = cx * this.sprite.width;
+}

@@ -25,7 +25,7 @@ var Game = {
 		this.background.push(Graphics.getSprite("back"));
 
 		// Test static collision
-		let animate = new Static(50, 50, "box", new BoundingBox(16, 16));
+		let animate = new Static(50, 50, "guy", new BoundingBox(16, 16));
 		this.static.push(animate);
 		this.static.push(new Static(0, 240, null, new BoundingBox(320, 10)));
 		this.static.push(new Static(0, -10, null, new BoundingBox(320, 10)));
@@ -33,6 +33,9 @@ var Game = {
 		this.static.push(new Static(-10, 0, null, new BoundingBox(10, 240)));
 
 		// Test character callbacks
+		animate = new Entity(150, 50, "box", new BoundingBox(16, 16));
+		animate.setAnimation("bloop");
+		this.entity.push(animate);
 		character = new TestObject(100, 100, "guy", new BoundingBox(16, 16));
 		this.entity.push(character);
 		/// End Tests ///
