@@ -22,6 +22,25 @@ var Graphics = {
 	// The framerate of sprites
 	sprite_fps: 6,
 
+	// Load sprite resources from a json file
+	load: function (json) {
+		Graphics.sprites = json.sprites;
+		Graphics.location = json.location;
+
+		// Load sprite data
+		let obj;
+		for (obj of Graphics.sprites) {
+			obj.image = new Image();
+			obj.image.src = Graphics.location + obj.file;
+		}
+
+		console.log("Sprite list loaded");
+		console.log(Graphics);
+
+		// Load graphics data
+		Game.initialize();
+	},
+
 	// Get a sprite with a given id from the sprite data array
 	getSprite: function (id) {
 		if (this.sprites) {
@@ -60,7 +79,7 @@ var Graphics = {
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision) {
 				Graphics.context.globalAlpha = 0.5;
-				Graphics.context.strokeRect(obj.hitbox.x, obj.hitbox.y, obj.hitbox.width, obj.hitbox.height);
+				Graphics.context.strokeRect(Math.round(obj.hitbox.x), Math.round(obj.hitbox.y), obj.hitbox.width, obj.hitbox.height);
 				Graphics.context.globalAlpha = 1;
 			}
 		}
@@ -71,7 +90,7 @@ var Graphics = {
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision) {
 				Graphics.context.globalAlpha = 0.5;
-				Graphics.context.strokeRect(obj.hitbox.x, obj.hitbox.y, obj.hitbox.width, obj.hitbox.height);
+				Graphics.context.strokeRect(Math.round(obj.hitbox.x), Math.round(obj.hitbox.y), obj.hitbox.width, obj.hitbox.height);
 				Graphics.context.globalAlpha = 1;
 			}
 		}

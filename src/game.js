@@ -8,9 +8,11 @@ var Game = {
 	entity: [],
 
 	// Start the game
-	start: function (page_canvas, frame_time) {
-		// Get the graphics context
-		Graphics.canvas = page_canvas;
+	initialize: function () {
+		// Get the graphics context and adjust the canvas
+		Graphics.canvas = document.getElementById("canvas");
+		Graphics.canvas.width = 320;
+		Graphics.canvas.height = 240;
 		Graphics.context = Graphics.canvas.getContext("2d");
 
 		// Catch key presses
@@ -18,7 +20,7 @@ var Game = {
 		window.addEventListener("keyup", Input.keyRelease);
 
 		// Measure framerate
-		Graphics.showFPS(true);;
+		Graphics.showFPS(true);
 
 		/// Testing stuff ///
 		// Test backgrounds
@@ -63,32 +65,27 @@ var Game = {
 
 		// Wait for the next draw cycle
 		window.requestAnimationFrame(Game.loop);
+	},
+
+	// Start the game
+	fBegin: function () {
+		// Load graphics data
+		getJSON("data/graphics.json", Graphics.load);
 	}
 };
 
-function beginGame() {
-	// Adjust the resolution of the canvas
-	let canvas = document.getElementById("canvas");
-	canvas.width = 320;
-	canvas.height = 240;
+var getJSON = function (address, callback) {
+	var xhttp = new XMLHttpRequest();
 
-	// Load graphics data
-	$.getJSON("data/graphics.json", function (json) {
-		Graphics.sprites = json.sprites;
-		Graphics.location = json.location;
-
-		// Load sprite data
-		let obj;
-		for (obj of Graphics.sprites) {
-			obj.image = new Image();
-			obj.image.src = Graphics.location + obj.file;
+	// Prepare the callback to trigger when the request is complete
+	xhttp.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			let json = JSON.parse(this.responseText);
+			callback(json);
 		}
+	};
 
-		console.log("Sprite list loaded");
-		console.log(Graphics);
-
-		// Start the game
-		Game.start(canvas, 5);;
-	});
-};
-
+	// Send the http request
+	xhttp.open("GET", address, true);
+	xhttp.send();
+}
