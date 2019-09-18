@@ -11,7 +11,7 @@ canvas {
 	background-color: #d3d3d3;
 
 	width: 960px;
-    
+
 	image-rendering: pixelated;
 	image-rendering: -moz-crisp-edges; /* FireFox */
 	image-rendering: -webkit-optimize-contrast; /* Safari */

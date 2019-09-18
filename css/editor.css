@@ -1,0 +1,97 @@
+﻿body {
+	background-color: black;
+	color: silver;
+}
+
+canvas.editor {
+	box-sizing: border-box;
+
+	width: 100%;
+	height: 100%;
+
+	border: 3px solid red;
+}
+
+canvas.sprite {
+	box-sizing: border-box;
+
+	width: 50%;
+
+	border: 3px solid red;
+}
+
+div.editor {
+	position: absolute;
+	box-sizing: border-box;
+
+	float: left;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+
+	margin: 20px 20px 20px 0;
+}
+
+div.options {
+	display: inline-block;
+	box-sizing: border-box;
+
+	width: 100%;
+	height: 100%;
+}
+
+div.panel {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+
+	flex-grow: 1;
+	overflow: auto;
+
+	border: 3px solid skyblue;
+	margin: 0 0 0 20px;
+}
+
+div.widepanel {
+	display: block;
+
+	flex-grow: 3;
+
+	border: 3px solid skyblue;
+	margin: 0 0 0 20px;
+}
+
+form.editor {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+
+	width: 100%;
+
+	box-sizing: border-box;
+	border: 2px solid green;
+
+	padding: 5%;
+}
+
+form.editor input {
+	width: 100%;
+}
+
+form.editor label {
+	margin: 4% 0 0 0 ;
+}
+
+select.list {
+	background-color: #f1f1f1;
+
+	width: 100%;
+
+	padding: 10px;
+}
