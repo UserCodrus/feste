@@ -13,8 +13,11 @@
 	<script src="src/object.js"></script>
 	<script src="src/input.js"></script>
 	<script src="src/game.js"></script>
+
+	<!-- Editor code -->
+	<script src="src/spriteeditor.js"></script>
 </head>
-<body>
+<body onload="SpriteEditor.begin()">
 	<div class="editor">
 		<div class="widepanel">
 			<!-- Sprite sheet display -->
@@ -22,59 +25,165 @@
 		</div>
 		<div class="panel">
 			<!-- Sprite editor -->
-			<form class="editor">
-				<select name="select" class="list">
-					<option value="1">opt a</option>
-					<option value="2">opt b</option>
-					<option value="3">opt c</option>
-					<option value="4">opt d</option>
-					<option value="5">opt e</option>
-					<option value="6">opt f</option>
-				</select>
+			<form class="editor" name="sprites">
+				<div class="tab" id="sprite_tab">
+					<label class="title">Sprite</label>
 
-				<select name="type">
-					<option value="background">Background</option>
-					<option value="sprite">Sprite</option>
-					<option value="sheet">Sprite Sheet</option>
-				</select>
+					<table>
+						<!-- Sprite selector -->
+						<tr>
+							<td colspan="2">
+								<select name="select" class="list">
+									<option value="1">opt a</option>
+									<option value="2">opt b</option>
+									<option value="3">opt c</option>
+									<option value="4">opt d</option>
+									<option value="5">opt e</option>
+									<option value="6">opt f</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="button">
+								<button>New</button>
+							</td>
+							<td class="button">
+								<button>Delete</button>
+							</td>
+						</tr>
+					</table>
 
-				<label>File</label>
-				<input type="text" name="file" />
-				<label>Width</label>
-				<input type="number" name="width" min="0" />
-				<label>Height</label>
-				<input type="number" name="height" min="0" />
+					<!-- Sprite data -->
+					<table>
+						<tr>
+							<td>
+								<label>Sprite Type</label>
+							</td>
+							<td>
+								<select name="type" onchange="SpriteEditor.hideTabs()">
+									<option value="background">Background</option>
+									<option value="sprite">Sprite</option>
+									<option value="sheet">Sprite Sheet</option>
+								</select>
+							</td>
+						</tr>
 
-				<label class="background">Parallax</label>
-				<input type="number" name="height" min="0" step="0.01" />
+						<tr>
+							<td>
+								<label>File Name</label>
+							</td>
+							<td>
+								<input type="text" name="file" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>Sprite Width</label>
+							</td>
+							<td>
+								<input type="number" name="width" min="0" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>Sprite Height</label>
+							</td>
+							<td>
+								<input type="number" name="height" min="0" />
+							</td>
+						</tr>
 
-				<label class="sheet">Sheet Width</label>
-				<input type="number" name="width" min="0" />
-				<label class="sheet">Sheet Height</label>
-				<input type="number" name="height" min="0" />
-			</form>
+						<!-- Extra data -->
+						<tr id="background_tab">
+							<td>
+								<label class="background">Parallax</label>
+							</td>
+							<td>
+								<input type="number" name="height" min="0" step="0.01" />
+							</td>
+						</tr>
+						<tr id="sheet_width_tab">
+							<td>
+								<label class="sheet">Sheet Width</label>
+							</td>
+							<td>
+								<input type="number" name="width" min="0" />
+							</td>
+						</tr>
+						<tr id="sheet_height_tab">
+							<td>
+								<label class="sheet">Sheet Height</label>
+							</td>
+							<td>
+								<input type="number" name="height" min="0" />
+							</td>
+						</tr>
+					</table>
+				</div>
 
-			<!-- Animation editor -->
-			<div class="center">
-				<canvas id="sprite" class="sprite">Your browser does not appear to support HTML5 canvas. You might want to get that looked at.</canvas>
-			</div>
 
-			<form class="editor">
-				<select name="select">
-					<option value="1">opt a</option>
-					<option value="2">opt b</option>
-					<option value="3">opt c</option>
-					<option value="4">opt d</option>
-					<option value="5">opt e</option>
-					<option value="6">opt f</option>
-				</select>
+				<!-- Animation editor -->
+				<div class="tab" id="animation_tab">
+					<label class="title">Animation</label>
 
-				<label>Name</label>
-				<input type="text" name="name" />
-				<label>Start</label>
-				<input type="number" name="start" min="0" />
-				<label>End</label>
-				<input type="number" name="end" min="0" />
+					<div class="center">
+						<canvas id="sprite" class="sprite">Your browser does not appear to support HTML5 canvas. You might want to get that looked at.</canvas>
+					</div>
+					<br />
+
+					<!-- Animation selector -->
+					<table>
+						<tr>
+							<td colspan="2">
+								<select name="animation" class="list">
+									<option value="1">opt a</option>
+									<option value="2">opt b</option>
+									<option value="3">opt c</option>
+									<option value="4">opt d</option>
+									<option value="5">opt e</option>
+									<option value="6">opt f</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="button">
+								<button>New</button>
+							</td>
+							<td class="button">
+								<button>Delete</button>
+							</td>
+						</tr>
+					</table>
+
+					<!-- Animation data -->
+					<table>
+						<tr>
+							<td>
+								<label>Animation Name</label>
+							</td>
+							<td>
+								<input type="text" name="name" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>Begin Frame</label>
+							</td>
+							<td>
+								<input type="number" name="start" min="0" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>End Frame</label>
+							</td>
+							<td>
+								<input type="number" name="end" min="0" />
+							</td>
+						</tr>
+					</table>
+
+				</div>
 			</form>
 		</div>
 	</div>
