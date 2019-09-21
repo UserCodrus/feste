@@ -114,7 +114,7 @@ Entity.prototype.setAnimation = function (animation_id) {
 			// Find an animation matching the provided id
 			let obj;
 			for (obj of this.sprite.animation) {
-				if (obj.name == animation_id) {
+				if (obj.id == animation_id) {
 					// Set the animation data
 					this.animation.set = obj;
 					this.animation.index = this.animation.set.start;
@@ -135,6 +135,6 @@ Entity.prototype.getSubimage = function () {
 	let cx = this.animation.index - (this.sprite.sheet.width * cy);
 
 	// Get the coordinates of the subimage
-	this.animation.y = cy * this.sprite.height;
-	this.animation.x = cx * this.sprite.width;
+	this.animation.y = cy * (this.sprite.height + this.sprite.sheet.ystride) + this.sprite.sheet.yoffset;
+	this.animation.x = cx * (this.sprite.width + this.sprite.sheet.xstride) + this.sprite.sheet.xoffset;
 }

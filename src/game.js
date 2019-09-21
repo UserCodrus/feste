@@ -68,9 +68,9 @@ var Game = {
 	},
 
 	// Start the game
-	fBegin: function () {
+	begin: function () {
 		// Load graphics data
-		getJSON("data/graphics.json", Graphics.load);
+		getJSON("data/graphics.json", Graphics.initialize);
 	}
 };
 

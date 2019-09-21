@@ -36,8 +36,11 @@ var Graphics = {
 
 		console.log("Sprite list loaded");
 		console.log(Graphics);
+	},
 
-		// Load graphics data
+	// Initialize the graphics system
+	initialize: function (json) {
+		Graphics.load(json);
 		Game.initialize();
 	},
 
@@ -157,4 +160,11 @@ function Background(id, filename, width, height, parallax) {
 	this.width = width;
 	this.height = height;
 	this.parallax = parallax;
+}
+
+// An animation for a sprite sheet
+function SpriteAnimation(id, start, end) {
+	this.id = id;
+	this.start = start;
+	this.end = end;
 }
