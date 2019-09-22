@@ -21,7 +21,13 @@ var SpriteEditor = {
 		SpriteEditor.selectSprite();
 	},
 
-	loadSelections: function () {
+	// Load sprites into the sprites selection box
+	loadSelections: function (select) {
+		// Sort sprites
+		Graphics.sprites.sort(function (a, b) {
+			return (a.id > b.id) - (a.id < b.id);
+		});
+
 		// Load sprite from the graphics system
 		let list = document.getElementById("select");
 		list.options.length = 0;
@@ -30,44 +36,93 @@ var SpriteEditor = {
 			opt.value = Graphics.sprites[i].id;
 			opt.innerHTML = Graphics.sprites[i].id;
 			list.appendChild(opt);
+
+			if (select) {
+				if (opt.value == select) {
+					list.selectedIndex = i;
+				}
+			}
+		}
+
+		// Load the selected sprite
+		if (select) {
+			SpriteEditor.selectSprite();
 		}
 	},
 
-	loadAnimations: function () {
+	// Load the current sprite's animations into the animation selection box
+	loadAnimations: function (select) {
 		let list = document.getElementById("animation");
 		list.options.length = 0;
 
-		// Load animation data from the selected sprite
 		if (SpriteEditor.selected_sprite.animation) {
+			// Sort animations
+			SpriteEditor.selected_sprite.animation.sort(function (a, b) {
+				return (a.id > b.id) - (a.id < b.id);
+			});
+
+			// Load animation data from the selected sprite
 			for (var i = 0; i < SpriteEditor.selected_sprite.animation.length; ++i) {
 				let opt = document.createElement("option");
 				opt.value = SpriteEditor.selected_sprite.animation[i].id;
 				opt.innerHTML = SpriteEditor.selected_sprite.animation[i].id;
 				list.appendChild(opt);
+
+				if (select) {
+					if (opt.value == select) {
+						list.selectedIndex = i;
+					}
+				}
+			}
+
+			// Load the selected animation
+			if (select) {
+				SpriteEditor.selectAnimation();
 			}
 		}
 	},
 
 	newSprite: function () {
-		Graphics.sprites.push(new Sprite("newsprite", "", 0, 0));
+		let id = prompt("Enter a new ID");
 
-		SpriteEditor.loadSelections();
+		if (id) {
+			Graphics.sprites.push(new Sprite(id, "", 0, 0));
+
+			SpriteEditor.loadSelections(id);
+		}
 	},
 
 	newAnimation: function () {
-		SpriteEditor.selected_sprite.animation.push(new SpriteAnimation("newanimation", 0, 1));
+		let id = prompt("Enter a new ID");
 
-		SpriteEditor.loadAnimations();
+		if (id) {
+			SpriteEditor.selected_sprite.animation.push(new SpriteAnimation(id, 0, 1));
+
+			SpriteEditor.loadAnimations(id);
+		}
 	},
 
 	deleteSprite: function () {
-		alert('Not yet available');
+		if (confirm("Are you sure you want to delete '" + SpriteEditor.selected_sprite.id + "'?")) {
+			alert('Not yet available');
+
+			SpriteEditor.loadSelections();
+			SpriteEditor.selectSprite();
+		}
 	},
 
 	deleteAnimation: function () {
-		alert('Not yet available');
+		if (SpriteEditor.selected_animation) {
+			if (confirm("Are you sure you want to delete '" + SpriteEditor.selected_animation.id + "'?")) {
+				alert('Not yet available');
+
+				SpriteEditor.loadAnimations();
+				SpriteEditor.selectAnimation();
+			}
+		}
 	},
 
+	// Load the sprite with the id matching the selection box into the editor forms
 	selectSprite: function () {
 		// Find the sprite with the matching id
 		let select = document.getElementById("select");
@@ -92,19 +147,20 @@ var SpriteEditor = {
 		SpriteEditor.hideTabs();
 	},
 
+	// Load the animation with the id matching the selection box into the editor forms
 	selectAnimation: function () {
+		SpriteEditor.selected_animation = null;
+		SpriteEditor.clearAnimationForm();
+
 		if (SpriteEditor.selected_sprite.animation) {
 			let select = document.getElementById("animation");
 			SpriteEditor.selected_animation = SpriteEditor.selected_sprite.animation[select.selectedIndex];
 
-			document.forms["sprites"]["anim_id"].value = SpriteEditor.selected_animation.id;
-			document.forms["sprites"]["anim_start"].value = SpriteEditor.selected_animation.start;
-			document.forms["sprites"]["anim_end"].value = SpriteEditor.selected_animation.end;
-		}
-		else {
-			document.forms["sprites"]["anim_id"].value = "";
-			document.forms["sprites"]["anim_start"].value = 0;
-			document.forms["sprites"]["anim_end"].value = 0;
+			if (SpriteEditor.selected_animation) {
+				document.forms["sprites"]["anim_id"].value = SpriteEditor.selected_animation.id;
+				document.forms["sprites"]["anim_start"].value = SpriteEditor.selected_animation.start;
+				document.forms["sprites"]["anim_end"].value = SpriteEditor.selected_animation.end;
+			}
 		}
 	},
 
@@ -120,6 +176,8 @@ var SpriteEditor = {
 
 			// Change the sprite
 			SpriteEditor.selected_sprite.id = id;
+
+			SpriteEditor.loadSelections(id);
 		}
 
 		// Change the sprite type
@@ -210,6 +268,7 @@ var SpriteEditor = {
 
 			// Change the animation
 			SpriteEditor.selected_animation.id = id;
+			SpriteEditor.loadAnimations(id);
 		}
 
 		// Update frame data
@@ -245,5 +304,11 @@ var SpriteEditor = {
 		else {
 			tab.style.display = "none";
 		}
+	},
+
+	clearAnimationForm: function () {
+		document.forms["sprites"]["anim_id"].value = "";
+		document.forms["sprites"]["anim_start"].value = 0;
+		document.forms["sprites"]["anim_end"].value = 0;
 	}
 }
