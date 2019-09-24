@@ -45,9 +45,7 @@ var SpriteEditor = {
 		}
 
 		// Load the selected sprite
-		if (select) {
-			SpriteEditor.selectSprite();
-		}
+		SpriteEditor.selectSprite();
 	},
 
 	// Load the current sprite's animations into the animation selection box
@@ -76,9 +74,7 @@ var SpriteEditor = {
 			}
 
 			// Load the selected animation
-			if (select) {
-				SpriteEditor.selectAnimation();
-			}
+			SpriteEditor.selectAnimation();
 		}
 	},
 
@@ -104,20 +100,24 @@ var SpriteEditor = {
 
 	deleteSprite: function () {
 		if (confirm("Are you sure you want to delete '" + SpriteEditor.selected_sprite.id + "'?")) {
-			alert('Not yet available');
+			// Remove the selected sprite
+			let select = document.getElementById("select");
+			Graphics.sprites.splice(select.selectedIndex, 1);
 
+			// Reload the selection list
 			SpriteEditor.loadSelections();
-			SpriteEditor.selectSprite();
 		}
 	},
 
 	deleteAnimation: function () {
 		if (SpriteEditor.selected_animation) {
 			if (confirm("Are you sure you want to delete '" + SpriteEditor.selected_animation.id + "'?")) {
-				alert('Not yet available');
+				// Remove the selected animation
+				let select = document.getElementById("animation");
+				SpriteEditor.selected_sprite.animation.splice(select.selectedIndex, 1);
 
+				// Reload the selection list
 				SpriteEditor.loadAnimations();
-				SpriteEditor.selectAnimation();
 			}
 		}
 	},
@@ -248,8 +248,10 @@ var SpriteEditor = {
 			document.forms["sprites"]["ystride"].value = 0;
 		}
 
-		// Change common values
+		// Change the sprite's file
 		SpriteEditor.selected_sprite.file = document.forms["sprites"]["file"].value;
+
+		// Change size values
 		SpriteEditor.selected_sprite.width = document.forms["sprites"]["width"].value;
 		SpriteEditor.selected_sprite.height = document.forms["sprites"]["height"].value;
 
