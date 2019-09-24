@@ -22,6 +22,9 @@ var Graphics = {
 	// The framerate of sprites
 	sprite_fps: 6,
 
+	// Set to true when the sprite list is loaded
+	ready: false,
+
 	// Load sprite resources from a json file
 	load: function (json) {
 		Graphics.sprites = json.sprites;
@@ -34,14 +37,9 @@ var Graphics = {
 			obj.image.src = Graphics.location + obj.file;
 		}
 
-		console.log("Sprite list loaded");
-		console.log(Graphics);
-	},
+		console.log("Graphics data loaded");
 
-	// Initialize the graphics system
-	initialize: function (json) {
-		Graphics.load(json);
-		Game.initialize();
+		Graphics.ready = true;
 	},
 
 	// Get a sprite with a given id from the sprite data array
@@ -100,12 +98,24 @@ var Graphics = {
 
 		// Draw the fps counter
 		if (Graphics.framerate_counter) {
+			Graphics.context.textAlign = "left";
 			Graphics.context.font = "10px Consolas";
 			Graphics.context.fillText("FPS  " + Graphics.fps, 2, 10);
 
 			// Increment the fps counter
 			Graphics.frames++;
 		}
+	},
+
+	// Draw a splash screen with text
+	splash: function (message) {
+		// Clear the canvas
+		Graphics.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		// Draw loading text
+		Graphics.context.textAlign = "center";
+		Graphics.context.font = "10px Consolas";
+		Graphics.context.fillText(message, Graphics.canvas.width / 2, Graphics.canvas.height / 2);
 	},
 
 	// Draw a sprite
@@ -126,7 +136,7 @@ var Graphics = {
 	},
 
 	// Start or stop the fps counter
-	showFPS: function (state) {
+	fShowFPS: function (state) {
 		if (state) {
 			// Start the fps counter if it isn't already running
 			if (!Graphics.framerate_counter) {

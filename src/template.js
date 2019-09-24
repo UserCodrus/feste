@@ -38,3 +38,37 @@ TestObject.prototype.onFrameUpdate = function (delta) {
 		this.y_velocity = 0;
 	}
 }
+
+function startGame() {
+	// Measure framerate
+	Graphics.fShowFPS(true);
+
+	// Create a dummy load function for loading test game data
+	Game.load = function () {
+		// Start the game when everything is loaded
+		if (Graphics.ready) {
+			Game.ready = true;
+
+			// Test backgrounds
+			Game.background.push(Graphics.getSprite("back"));
+
+			// Test static collision
+			let animate = new Static(50, 50, "guy", new BoundingBox(16, 16));
+			Game.static.push(animate);
+			Game.static.push(new Static(0, 240, null, new BoundingBox(320, 10)));
+			Game.static.push(new Static(0, -10, null, new BoundingBox(320, 10)));
+			Game.static.push(new Static(320, 0, null, new BoundingBox(10, 240)));
+			Game.static.push(new Static(-10, 0, null, new BoundingBox(10, 240)));
+
+			// Test character callbacks
+			animate = new Entity(150, 50, "box", new BoundingBox(16, 16));
+			animate.setAnimation("bloop");
+			Game.entity.push(animate);
+			let character = new TestObject(100, 100, "guy", new BoundingBox(16, 16));
+			Game.entity.push(character);
+		}
+	};
+
+	// Start the game
+	Game.begin("canvas");
+}
