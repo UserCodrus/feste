@@ -205,6 +205,10 @@ var SpriteEditor = {
 			if (SpriteEditor.selected_sprite.sheet) {
 				document.forms["sprites"]["sheet_width"].value = SpriteEditor.selected_sprite.sheet.width;
 				document.forms["sprites"]["sheet_height"].value = SpriteEditor.selected_sprite.sheet.height;
+				document.forms["sprites"]["xoffset"].value = SpriteEditor.selected_sprite.sheet.xoffset;
+				document.forms["sprites"]["yoffset"].value = SpriteEditor.selected_sprite.sheet.yoffset;
+				document.forms["sprites"]["xstride"].value = SpriteEditor.selected_sprite.sheet.xstride;
+				document.forms["sprites"]["ystride"].value = SpriteEditor.selected_sprite.sheet.ystride;
 			}
 
 			// Set the display sprite
@@ -276,7 +280,7 @@ var SpriteEditor = {
 					SpriteEditor.resetTabBackground();
 				}
 
-				SpriteEditor.selected_sprite.parallax = document.forms["sprites"]["parallax"].value;
+				SpriteEditor.selected_sprite.parallax = Number(document.forms["sprites"]["parallax"].value);
 			}
 			else {
 				// Delete uneeded properties
@@ -298,12 +302,12 @@ var SpriteEditor = {
 					SpriteEditor.resetTabSheet();
 				}
 
-				SpriteEditor.selected_sprite.sheet.width = document.forms["sprites"]["sheet_width"].value;
-				SpriteEditor.selected_sprite.sheet.height = document.forms["sprites"]["sheet_height"].value;
-				SpriteEditor.selected_sprite.sheet.xoffset = document.forms["sprites"]["xoffset"].value;
-				SpriteEditor.selected_sprite.sheet.yoffset = document.forms["sprites"]["yoffset"].value;
-				SpriteEditor.selected_sprite.sheet.xstride = document.forms["sprites"]["xstride"].value;
-				SpriteEditor.selected_sprite.sheet.ystride = document.forms["sprites"]["ystride"].value;
+				SpriteEditor.selected_sprite.sheet.width = Number(document.forms["sprites"]["sheet_width"].value);
+				SpriteEditor.selected_sprite.sheet.height = Number(document.forms["sprites"]["sheet_height"].value);
+				SpriteEditor.selected_sprite.sheet.xoffset = Number(document.forms["sprites"]["xoffset"].value);
+				SpriteEditor.selected_sprite.sheet.yoffset = Number(document.forms["sprites"]["yoffset"].value);
+				SpriteEditor.selected_sprite.sheet.xstride = Number(document.forms["sprites"]["xstride"].value);
+				SpriteEditor.selected_sprite.sheet.ystride = Number(document.forms["sprites"]["ystride"].value);
 
 				// Add an animation array
 				if (!SpriteEditor.selected_sprite.animation) {
@@ -326,8 +330,8 @@ var SpriteEditor = {
 			SpriteEditor.selected_sprite.file = document.forms["sprites"]["file"].value;
 
 			// Change size values
-			SpriteEditor.selected_sprite.width = document.forms["sprites"]["width"].value;
-			SpriteEditor.selected_sprite.height = document.forms["sprites"]["height"].value;
+			SpriteEditor.selected_sprite.width = Number(document.forms["sprites"]["width"].value);
+			SpriteEditor.selected_sprite.height = Number(document.forms["sprites"]["height"].value);
 
 			SpriteEditor.hideTabs();
 		} else {
@@ -351,8 +355,8 @@ var SpriteEditor = {
 		}
 
 		// Update frame data
-		SpriteEditor.selected_animation.start = document.forms["sprites"]["anim_start"].value;
-		SpriteEditor.selected_animation.end = document.forms["sprites"]["anim_end"].value;
+		SpriteEditor.selected_animation.start = Number(document.forms["sprites"]["anim_start"].value);
+		SpriteEditor.selected_animation.end = Number(document.forms["sprites"]["anim_end"].value);
 	},
 
 	// Hide unneeded tabs

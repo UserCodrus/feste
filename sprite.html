@@ -127,7 +127,7 @@
 								<label class="background">Parallax</label>
 							</td>
 							<td>
-								<input type="number" name="parallax" min="0" value="0" step="0.01" />
+								<input type="number" name="parallax" min="0" value="0" step="0.01" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 					</table>
@@ -142,7 +142,7 @@
 								<label class="sheet" title="The number of animation cells on the horizontal axis">Horizontal Cells</label>
 							</td>
 							<td>
-								<input type="number" name="sheet_width" min="1" value="1" />
+								<input type="number" name="sheet_width" min="1" value="1" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 						<tr>
@@ -150,7 +150,7 @@
 								<label class="sheet" title="The number of animation cells on the vertical axis">Vertical Cells</label>
 							</td>
 							<td>
-								<input type="number" name="sheet_height" min="1" value="1" />
+								<input type="number" name="sheet_height" min="1" value="1" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 						<tr>
@@ -158,7 +158,7 @@
 								<label class="sheet" title="The distance between the left edge of the sheet and the first cell">X Offset</label>
 							</td>
 							<td>
-								<input type="number" name="xoffset" min="0" value="0" />
+								<input type="number" name="xoffset" min="0" value="0" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 						<tr>
@@ -166,7 +166,7 @@
 								<label class="sheet" title="The distance between the top edge of the sheet and the first cell">Y Offset</label>
 							</td>
 							<td>
-								<input type="number" name="yoffset" min="0" value="0" />
+								<input type="number" name="yoffset" min="0" value="0" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 						<tr>
@@ -174,7 +174,7 @@
 								<label class="sheet" title="The horizontal distance between animation cells">X Stride</label>
 							</td>
 							<td>
-								<input type="number" name="xstride" min="0" value="0" />
+								<input type="number" name="xstride" min="0" value="0" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 						<tr>
@@ -182,7 +182,7 @@
 								<label class="sheet" title="The vertical distance between animation cells">Y Stride</label>
 							</td>
 							<td>
-								<input type="number" name="ystride" min="0" value="0" />
+								<input type="number" name="ystride" min="0" value="0" onchange="SpriteEditor.editSprite()" />
 							</td>
 						</tr>
 					</table>
