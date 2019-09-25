@@ -64,6 +64,8 @@ function startGame() {
 			animate = new Entity(150, 50, "box", new BoundingBox(16, 16));
 			animate.setAnimation("bloop");
 			Game.entity.push(animate);
+			animate = new Entity(150, 150, "box", new BoundingBox(16, 16));
+			Game.entity.push(animate);
 			let character = new TestObject(100, 100, "guy", new BoundingBox(16, 16));
 			Game.entity.push(character);
 		}

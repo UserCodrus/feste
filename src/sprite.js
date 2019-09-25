@@ -122,11 +122,18 @@ var Graphics = {
 	draw: function (sprite, animation, x, y) {
 		if (animation) {
 			if (animation.set) {
+				// Animated sprite
 				Graphics.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);
-				return;
+			}
+			else {
+				// Full sheet
+				Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.image.width, sprite.image.height);
 			}
 		}
-		Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
+		else {
+			// Single sprite
+			Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
+		}
 	},
 
 	// Measure framerate

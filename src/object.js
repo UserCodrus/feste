@@ -126,6 +126,9 @@ Entity.prototype.setAnimation = function (animation_id) {
 			}
 		}
 	}
+	else {
+		this.animation.set = null;
+	}
 }
 
 // Get the coordinates of the current subimage of the sprite
