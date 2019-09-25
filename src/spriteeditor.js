@@ -31,6 +31,7 @@ var SpriteEditor = {
 
 			// Load system objects
 			SpriteEditor.mannequin = new GameObject(0, 0, null, null);
+			SpriteEditor.mannequin.keydown = false;
 			SpriteEditor.mannequin.onFrameUpdate = function (delta) {
 				// Adjust the window if needed
 				if (SpriteEditor.editor_width != Graphics.canvas.clientWidth || SpriteEditor.editor_height != Graphics.canvas.clientHeight) {
@@ -41,8 +42,28 @@ var SpriteEditor = {
 					Graphics.canvas.height = SpriteEditor.editor_height / SpriteEditor.zoom;
 				}
 
+				// Swap between sprite view and animation view
+				if (this.sprite.animation) {
+					if (Input.keys[Keyboard.key_a]) {
+						if (!this.keydown) {
+							// Set the animation for this object
+							if (this.animation.set) {
+								this.setAnimation(null);
+							} else {
+								if (SpriteEditor.selected_animation) {
+									this.setAnimation(SpriteEditor.selected_animation.id);
+								}
+							}
+
+							this.keydown = true;
+						}
+					} else {
+						this.keydown = false;
+					}
+				}
+
 				// Position the mannequin
-				if (!this.sprite.sheet || this.sprite.animation.set) {
+				if (!this.sprite.sheet || this.animation.set) {
 					this.x = Graphics.canvas.width / 2 - this.sprite.width / 2;
 					this.y = Graphics.canvas.height / 2 - this.sprite.height / 2;
 				} else {
@@ -206,6 +227,14 @@ var SpriteEditor = {
 				document.forms["sprites"]["anim_id"].value = SpriteEditor.selected_animation.id;
 				document.forms["sprites"]["anim_start"].value = SpriteEditor.selected_animation.start;
 				document.forms["sprites"]["anim_end"].value = SpriteEditor.selected_animation.end;
+
+				if (SpriteEditor.mannequin.animation.set) {
+					SpriteEditor.mannequin.setAnimation(SpriteEditor.selected_animation.id);
+				}
+			} else {
+				if (SpriteEditor.mannequin.animation.set) {
+					SpriteEditor.mannequin.setAnimation(null);
+				}
 			}
 		}
 	},

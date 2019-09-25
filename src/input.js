@@ -22,6 +22,7 @@ const Keyboard = {
 	key_ctrl: 17,
 	key_alt: 18,
 	key_esc: 27,
+	key_space: 32,
 	key_page_up: 33,
 	key_page_down: 34,
 	key_end: 35,
