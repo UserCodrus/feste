@@ -12,7 +12,9 @@ var Graphics = {
 	sprites: null,
 
 	// Set to true to draw bounding boxes
-	show_collision: true,
+	show_collision: false,
+	// Set to true to draw sprite sheet cells
+	show_cells: false,
 
 	// The framerate counter - enable or disable with Graphics.showFPS([true / false])
 	framerate_counter: null,
@@ -72,16 +74,34 @@ var Graphics = {
 		Graphics.context.lineWidth = 1;
 		let obj;
 		for (obj of Game.objects) {
-			// Draw entity sprites
+			// Draw sprites
 			if (obj.sprite) {
 				Graphics.draw(obj.sprite, obj.animation, obj.x, obj.y);
+
+				// Draw sprite sheet boxes if enabled
+				if (Graphics.show_cells) {
+					if (obj.sprite.sheet && !obj.animation.set) {
+						Graphics.context.strokeStyle = "red";
+						let x, y;
+						for (x = 0; x < obj.sprite.sheet.width; ++x) {
+							for (y = 0; y < obj.sprite.sheet.height; ++y) {
+								let dx = obj.x + x * (obj.sprite.width + obj.sprite.sheet.xstride) + obj.sprite.sheet.xoffset - 0.5;
+								let dy = obj.y + y * (obj.sprite.height + obj.sprite.sheet.ystride) + obj.sprite.sheet.yoffset - 0.5;
+								Graphics.context.strokeRect(dx, dy, obj.sprite.width + 1, obj.sprite.height + 1);
+							}
+						}
+					}
+				}
 			}
 
 			// Draw bounding boxes if enabled
-			if (Graphics.show_collision && obj.hitbox) {
-				Graphics.context.globalAlpha = 0.5;
-				Graphics.context.strokeRect(Math.round(obj.hitbox.x), Math.round(obj.hitbox.y), obj.hitbox.width, obj.hitbox.height);
-				Graphics.context.globalAlpha = 1;
+			if (Graphics.show_collision) {
+				if (obj.hitbox) {
+					Graphics.context.globalAlpha = 0.5;
+					Graphics.context.strokeStyle = "white";
+					Graphics.context.strokeRect(Math.round(obj.hitbox.x) + 0.5, Math.round(obj.hitbox.y) + 0.5, obj.hitbox.width - 1, obj.hitbox.height - 1);
+					Graphics.context.globalAlpha = 1;
+				}
 			}
 		}
 
@@ -109,7 +129,7 @@ var Graphics = {
 
 	// Draw a sprite
 	draw: function (sprite, animation, x, y) {
-		if (animation) {
+		if (sprite.animation) {
 			if (animation.set) {
 				// Animated sprite
 				Graphics.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);

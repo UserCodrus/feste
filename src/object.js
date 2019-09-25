@@ -29,6 +29,8 @@ var GameObject = function (x, y, sprite_id, collision) {
 		x: 0,
 		y: 0
 	}
+
+	this.solid = true;
 };
 
 // Called every frame when the object updates
@@ -88,14 +90,18 @@ GameObject.prototype.update = function (delta) {
 		// X Axis
 		let obj = this.collision(this.x_velocity, 0);
 		if (obj) {
-			x_collide = true;
-			this.onCollision(obj);
+			if (obj.solid) {
+				x_collide = true;
+				this.onCollision(obj);
+			}
 		}
 		// Y Axis
 		obj = this.collision(0, this.y_velocity);
 		if (obj) {
-			y_collide = true;
-			this.onCollision(obj);
+			if (obj.solid) {
+				y_collide = true;
+				this.onCollision(obj);
+			}
 		}
 	}
 

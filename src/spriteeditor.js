@@ -17,6 +17,9 @@ var SpriteEditor = {
 	editor_height: 0,
 
 	begin: function () {
+		// Show sprite sheet cells
+		Graphics.show_cells = true;
+
 		// Set the game's main loading system to use the editor version
 		Game.load = SpriteEditor.load;
 
