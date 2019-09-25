@@ -1,14 +1,12 @@
 ﻿"use strict";
 
-// An immobile object
-function Static(x, y, sprite_id, collision) {
+// A mobile object with physics
+var GameObject = function (x, y, sprite_id, collision) {
 	this.x = x;
 	this.y = y;
 
-	// Set the sprite
-	if (sprite_id) {
-		this.sprite = Graphics.getSprite(sprite_id);
-	}
+	this.x_velocity = 0;
+	this.y_velocity = 0;
 
 	// Set the collision box
 	if (collision) {
@@ -16,14 +14,11 @@ function Static(x, y, sprite_id, collision) {
 		this.hitbox.x = this.x;
 		this.hitbox.y = this.y;
 	}
-};
 
-// A mobile object with physics
-var GameObject = function (x, y, sprite_id, collision) {
-	Static.call(this, x, y, sprite_id, collision);
-
-	this.x_velocity = 0;
-	this.y_velocity = 0;
+	// Set the sprite
+	if (sprite_id) {
+		this.sprite = Graphics.getSprite(sprite_id);
+	}
 
 	// The animation data for this object's sprite
 	this.animation = {
@@ -49,9 +44,11 @@ GameObject.prototype.onCollision = function (object) {
 // Check for collision with other objects
 GameObject.prototype.collision = function (x_offset, y_offset) {
 	let obj;
-	for (obj of Game.static) {
-		if (this.hitbox.boxCollision(obj.hitbox, x_offset, y_offset)) {
-			return obj;
+	for (obj of Game.objects) {
+		if (obj != this) {
+			if (this.hitbox.boxCollision(obj.hitbox, x_offset, y_offset)) {
+				return obj;
+			}
 		}
 	}
 	return null;

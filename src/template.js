@@ -53,21 +53,21 @@ function startGame() {
 			Game.background.push(Graphics.getSprite("back"));
 
 			// Test static collision
-			let animate = new Static(50, 50, "guy", new BoundingBox(16, 16));
-			Game.static.push(animate);
-			Game.static.push(new Static(0, 240, null, new BoundingBox(320, 10)));
-			Game.static.push(new Static(0, -10, null, new BoundingBox(320, 10)));
-			Game.static.push(new Static(320, 0, null, new BoundingBox(10, 240)));
-			Game.static.push(new Static(-10, 0, null, new BoundingBox(10, 240)));
+			let animate = new GameObject(50, 50, "guy", new BoundingBox(16, 16));
+			Game.objects.push(animate);
+			Game.objects.push(new GameObject(0, 240, null, new BoundingBox(320, 10)));
+			Game.objects.push(new GameObject(0, -10, null, new BoundingBox(320, 10)));
+			Game.objects.push(new GameObject(320, 0, null, new BoundingBox(10, 240)));
+			Game.objects.push(new GameObject(-10, 0, null, new BoundingBox(10, 240)));
 
 			// Test character callbacks
 			animate = new GameObject(150, 50, "box", new BoundingBox(16, 16));
 			animate.setAnimation("bloop");
-			Game.entity.push(animate);
+			Game.objects.push(animate);
 			animate = new GameObject(150, 150, "box", new BoundingBox(16, 16));
-			Game.entity.push(animate);
+			Game.objects.push(animate);
 			let character = new TestObject(100, 100, "guy", new BoundingBox(16, 16));
-			Game.entity.push(character);
+			Game.objects.push(character);
 		}
 	};
 

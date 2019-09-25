@@ -2,8 +2,7 @@
 
 var Game = {
 	background: [],
-	static: [],
-	entity: [],
+	objects: [],
 
 	ready: false,
 
@@ -45,7 +44,7 @@ var Game = {
 		if (Game.ready) {
 			// Update entities
 			let obj;
-			for (obj of Game.entity) {
+			for (obj of Game.objects) {
 				obj.update(delta);
 			}
 

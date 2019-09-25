@@ -30,21 +30,24 @@ var SpriteEditor = {
 			Game.ready = true;
 
 			// Load system objects
+
+			// Editor controls
+			let controller = new GameObject(0, 0, null, null);
+			controller.keydown_zoomin = false;
+			controller.keydown_zoomout = false;
+			controller.keydown_zoomreset = false;
+			controller.onFrameUpdate = SpriteEditor.keyboardControls;
+			Game.objects.push(controller);
+
+			// Window resizer
+			controller = new GameObject(0, 0, null, null);
+			controller.onFrameUpdate = SpriteEditor.resizeWindow;
+			Game.objects.push(controller);
+
+			// Sprite display
 			SpriteEditor.mannequin = new GameObject(0, 0, null, null);
 			SpriteEditor.mannequin.keydown_anim = false;
-			SpriteEditor.mannequin.keydown_zoomin = false;
-			SpriteEditor.mannequin.keydown_zoomout = false;
-			SpriteEditor.mannequin.keydown_zoomreset = false;
 			SpriteEditor.mannequin.onFrameUpdate = function (delta) {
-				// Adjust the window if needed
-				if (SpriteEditor.editor_width != Graphics.canvas.clientWidth || SpriteEditor.editor_height != Graphics.canvas.clientHeight) {
-					SpriteEditor.editor_width = canvas.clientWidth;
-					SpriteEditor.editor_height = canvas.clientHeight;
-
-					Graphics.canvas.width = SpriteEditor.editor_width / SpriteEditor.zoom;
-					Graphics.canvas.height = SpriteEditor.editor_height / SpriteEditor.zoom;
-				}
-
 				// Swap between sprite view and animation view
 				if (this.sprite.animation) {
 					if (Input.keys[Keyboard.key_a]) {
@@ -65,63 +68,6 @@ var SpriteEditor = {
 					}
 				}
 
-				// Zoom the editor in or out
-				if (Input.keys[Keyboard.key_equals]) {
-					if (!this.keydown_zoomin) {
-						// Zoom in
-						if (Input.keys[Keyboard.key_shift]) {
-							SpriteEditor.zoom += 0.5;
-						} else {
-							SpriteEditor.zoom += 0.1;
-						}
-
-						if (SpriteEditor.zoom > 10) {
-							SpriteEditor.zoom = 10;
-						}
-
-						// Force canvas resizing
-						SpriteEditor.editor_width = 0;
-
-						this.keydown_zoomin = true;
-					}
-				} else {
-					this.keydown_zoomin = false;
-				}
-				if (Input.keys[Keyboard.key_dash]) {
-					if (!this.keydown_zoomout) {
-						// Zoom out
-						if (Input.keys[Keyboard.key_shift]) {
-							SpriteEditor.zoom -= 0.5;
-						} else {
-							SpriteEditor.zoom -= 0.1;
-						}
-
-						if (SpriteEditor.zoom < 0) {
-							SpriteEditor.zoom = 0;
-						}
-
-						// Force canvas resizing
-						SpriteEditor.editor_width = 0;
-
-						this.keydown_zoomout = true;
-					}
-				} else {
-					this.keydown_zoomout = false;
-				}
-				if (Input.keys[Keyboard.key_backspace]) {
-					if (!this.keydown_zoomreset) {
-						// Reset zoom
-						SpriteEditor.zoom = 2;
-
-						// Force canvas resizing
-						SpriteEditor.editor_width = 0;
-
-						this.keydown_zoomreset = true;
-					}
-				} else {
-					this.keydown_zoomreset = false;
-				}
-
 				// Position the mannequin
 				if (!this.sprite.sheet || this.animation.set) {
 					this.x = Graphics.canvas.width / 2 - this.sprite.width / 2;
@@ -131,7 +77,7 @@ var SpriteEditor = {
 					this.y = Graphics.canvas.height / 2 - this.sprite.image.height / 2;
 				}
 			}
-			Game.entity.push(SpriteEditor.mannequin);
+			Game.objects.push(SpriteEditor.mannequin);
 
 			// Load sprite options
 			SpriteEditor.loadSelections();
@@ -437,8 +383,79 @@ var SpriteEditor = {
 		}
 	},
 
-	// Reset tabs with their default values
+	// Editor keyboad controls
+	keyboardControls: function () {
+		// Zoom in
+		if (Input.keys[Keyboard.key_equals]) {
+			if (!this.keydown_zoomin) {
+				if (Input.keys[Keyboard.key_shift]) {
+					SpriteEditor.zoom += 0.5;
+				} else {
+					SpriteEditor.zoom += 0.1;
+				}
 
+				if (SpriteEditor.zoom > 10) {
+					SpriteEditor.zoom = 10;
+				}
+
+				// Force canvas resizing
+				SpriteEditor.editor_width = 0;
+
+				this.keydown_zoomin = true;
+			}
+		} else {
+			this.keydown_zoomin = false;
+		}
+
+		// Zoom out
+		if (Input.keys[Keyboard.key_dash]) {
+			if (!this.keydown_zoomout) {
+				if (Input.keys[Keyboard.key_shift]) {
+					SpriteEditor.zoom -= 0.5;
+				} else {
+					SpriteEditor.zoom -= 0.1;
+				}
+
+				if (SpriteEditor.zoom < 0) {
+					SpriteEditor.zoom = 0;
+				}
+
+				// Force canvas resizing
+				SpriteEditor.editor_width = 0;
+
+				this.keydown_zoomout = true;
+			}
+		} else {
+			this.keydown_zoomout = false;
+		}
+
+		// Reset zoom level
+		if (Input.keys[Keyboard.key_backspace]) {
+			if (!this.keydown_zoomreset) {
+				SpriteEditor.zoom = 2;
+
+				// Force canvas resizing
+				SpriteEditor.editor_width = 0;
+
+				this.keydown_zoomreset = true;
+			}
+		} else {
+			this.keydown_zoomreset = false;
+		}
+	},
+
+	// Resize the editor window
+	resizeWindow: function () {
+		if (SpriteEditor.editor_width != Graphics.canvas.clientWidth || SpriteEditor.editor_height != Graphics.canvas.clientHeight) {
+			SpriteEditor.editor_width = canvas.clientWidth;
+			SpriteEditor.editor_height = canvas.clientHeight;
+
+			Graphics.canvas.width = SpriteEditor.editor_width / SpriteEditor.zoom;
+			Graphics.canvas.height = SpriteEditor.editor_height / SpriteEditor.zoom;
+		}
+	},
+
+	// Reset tabs with their default values
 	resetTabSprite: function () {
 		document.forms["sprites"]["id"].value = "";
 		document.forms["sprites"]["type"].value = "sprite";

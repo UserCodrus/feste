@@ -71,22 +71,11 @@ var Graphics = {
 		Graphics.context.strokeStyle = "#FFFFFF";
 		Graphics.context.lineWidth = 1;
 		let obj;
-		for (obj of Game.static) {
-			// Draw static sprites
-			if (obj.sprite) {
-				Graphics.draw(obj.sprite, null, obj.x, obj.y);
-			}
-
-			// Draw bounding boxes if enabled
-			if (Graphics.show_collision && obj.hitbox) {
-				Graphics.context.globalAlpha = 0.5;
-				Graphics.context.strokeRect(Math.round(obj.hitbox.x), Math.round(obj.hitbox.y), obj.hitbox.width, obj.hitbox.height);
-				Graphics.context.globalAlpha = 1;
-			}
-		}
-		for (obj of Game.entity) {
+		for (obj of Game.objects) {
 			// Draw entity sprites
-			Graphics.draw(obj.sprite, obj.animation, obj.x, obj.y);
+			if (obj.sprite) {
+				Graphics.draw(obj.sprite, obj.animation, obj.x, obj.y);
+			}
 
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision && obj.hitbox) {
