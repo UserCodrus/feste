@@ -24,8 +24,22 @@
 			<canvas id="canvas" class="editor">Your browser does not appear to support HTML5 canvas. You might want to get that looked at.</canvas>
 		</div>
 		<div class="panel">
-			<!-- Sprite editor -->
 			<form class="editor" name="sprites">
+				<!-- File manager -->
+				<div class="tab" name="main">
+					<table>
+						<tr>
+							<td class="button">
+								<button type="button" onclick="">Save</button>
+							</td>
+							<td class="button">
+								<button type="button" onclick="">Load</button>
+							</td>
+						</tr>
+					</table>
+				</div>
+
+				<!-- Sprite editor -->
 				<div class="tab" id="sprite_tab">
 					<label class="title">Sprite</label>
 
@@ -106,6 +120,7 @@
 
 				<!-- Background data -->
 				<div class="tab" id="background_tab">
+					<label class="title">Background</label>
 					<table>
 						<tr>
 							<td>
@@ -120,6 +135,7 @@
 
 				<!-- Sprite sheet data -->
 				<div class="tab" id="sheet_tab">
+					<label class="title">Sprite Sheet</label>
 					<table>
 						<tr>
 							<td>
@@ -176,11 +192,6 @@
 				<!-- Animation editor -->
 				<div class="tab" id="animation_tab">
 					<label class="title">Animation</label>
-
-					<div class="center">
-						<canvas id="sprite" class="sprite">Your browser does not appear to support HTML5 canvas. You might want to get that looked at.</canvas>
-					</div>
-					<br />
 
 					<!-- Animation selector -->
 					<table>

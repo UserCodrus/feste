@@ -72,5 +72,5 @@ function startGame() {
 	};
 
 	// Start the game
-	Game.begin("canvas");
+	Game.begin("canvas", 320, 240);
 }

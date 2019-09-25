@@ -8,7 +8,7 @@ var Game = {
 	ready: false,
 
 	// Start the game
-	begin: function (canvas_id) {
+	begin: function (canvas_id, width, height) {
 		// Load graphics data
 		getJSON("data/graphics.json", Graphics.load);
 
@@ -17,8 +17,8 @@ var Game = {
 		Graphics.context = Graphics.canvas.getContext("2d");
 
 		// Adjust the canvas
-		Graphics.canvas.width = 320;
-		Graphics.canvas.height = 240;
+		Graphics.canvas.width = width;
+		Graphics.canvas.height = height;
 
 		// Catch key presses
 		window.addEventListener("keydown", Input.keyPress);
