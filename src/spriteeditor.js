@@ -3,12 +3,20 @@
 var SpriteEditor = {
 	// The currently selected sprite
 	selected_sprite: null,
+	// The currently selected animation
 	selected_animation: null,
 
-	begin: function () {
-		// Measure framerate
-		Graphics.fShowFPS(true);
+	// The game object that displays the current sprite
+	mannequin: null,
 
+	// The zoom level of the editor window
+	zoom: 2,
+
+	// The dimensions of the editor window
+	editor_width: 0,
+	editor_height: 0,
+
+	begin: function () {
 		// Set the game's main loading system to use the editor version
 		Game.load = SpriteEditor.load;
 
@@ -21,11 +29,31 @@ var SpriteEditor = {
 		if (Graphics.ready) {
 			Game.ready = true;
 
+			// Load system objects
+			SpriteEditor.mannequin = new GameObject(0, 0, null, null);
+			SpriteEditor.mannequin.onFrameUpdate = function (delta) {
+				// Adjust the window if needed
+				if (SpriteEditor.editor_width != Graphics.canvas.clientWidth || SpriteEditor.editor_height != Graphics.canvas.clientHeight) {
+					SpriteEditor.editor_width = canvas.clientWidth;
+					SpriteEditor.editor_height = canvas.clientHeight;
+
+					Graphics.canvas.width = SpriteEditor.editor_width / SpriteEditor.zoom;
+					Graphics.canvas.height = SpriteEditor.editor_height / SpriteEditor.zoom;
+				}
+
+				// Position the mannequin
+				if (!this.sprite.sheet || this.sprite.animation.set) {
+					this.x = Graphics.canvas.width / 2 - this.sprite.width / 2;
+					this.y = Graphics.canvas.height / 2 - this.sprite.height / 2;
+				} else {
+					this.x = Graphics.canvas.width / 2 - this.sprite.image.width / 2;
+					this.y = Graphics.canvas.height / 2 - this.sprite.image.height / 2;
+				}
+			}
+			Game.entity.push(SpriteEditor.mannequin);
+
 			// Load sprite options
 			SpriteEditor.loadSelections();
-
-			// Hide tabs
-			SpriteEditor.selectSprite();
 		}
 	},
 
@@ -152,6 +180,10 @@ var SpriteEditor = {
 				document.forms["sprites"]["sheet_height"].value = SpriteEditor.selected_sprite.sheet.height;
 			}
 
+			// Set the display sprite
+			SpriteEditor.mannequin.sprite = Graphics.getSprite(SpriteEditor.selected_sprite.id);
+
+			// Load animation data
 			SpriteEditor.loadAnimations();
 			SpriteEditor.selectAnimation();
 		} else {

@@ -2,12 +2,12 @@
 
 // Test data for building the editor
 var TestObject = function(x, y, sprite_id, collision) {
-	Entity.call(this, x, y, sprite_id, collision);
+	GameObject.call(this, x, y, sprite_id, collision);
 
 	this.hp = 100;
 }
 
-TestObject.prototype = Object.create(Entity.prototype);
+TestObject.prototype = Object.create(GameObject.prototype);
 TestObject.prototype.constructor = TestObject;
 
 TestObject.prototype.onFrameUpdate = function (delta) {
@@ -61,10 +61,10 @@ function startGame() {
 			Game.static.push(new Static(-10, 0, null, new BoundingBox(10, 240)));
 
 			// Test character callbacks
-			animate = new Entity(150, 50, "box", new BoundingBox(16, 16));
+			animate = new GameObject(150, 50, "box", new BoundingBox(16, 16));
 			animate.setAnimation("bloop");
 			Game.entity.push(animate);
-			animate = new Entity(150, 150, "box", new BoundingBox(16, 16));
+			animate = new GameObject(150, 150, "box", new BoundingBox(16, 16));
 			Game.entity.push(animate);
 			let character = new TestObject(100, 100, "guy", new BoundingBox(16, 16));
 			Game.entity.push(character);

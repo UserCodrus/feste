@@ -78,7 +78,7 @@ var Graphics = {
 			}
 
 			// Draw bounding boxes if enabled
-			if (Graphics.show_collision) {
+			if (Graphics.show_collision && obj.hitbox) {
 				Graphics.context.globalAlpha = 0.5;
 				Graphics.context.strokeRect(Math.round(obj.hitbox.x), Math.round(obj.hitbox.y), obj.hitbox.width, obj.hitbox.height);
 				Graphics.context.globalAlpha = 1;
@@ -89,7 +89,7 @@ var Graphics = {
 			Graphics.draw(obj.sprite, obj.animation, obj.x, obj.y);
 
 			// Draw bounding boxes if enabled
-			if (Graphics.show_collision) {
+			if (Graphics.show_collision && obj.hitbox) {
 				Graphics.context.globalAlpha = 0.5;
 				Graphics.context.strokeRect(Math.round(obj.hitbox.x), Math.round(obj.hitbox.y), obj.hitbox.width, obj.hitbox.height);
 				Graphics.context.globalAlpha = 1;
