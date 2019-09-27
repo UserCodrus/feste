@@ -30,10 +30,11 @@
 					<table>
 						<tr>
 							<td class="button">
-								<button type="button" onclick="">Save</button>
+								<button type="button" onclick="SpriteEditor.saveData();">Save</button>
 							</td>
 							<td class="button">
-								<button type="button" onclick="">Load</button>
+								<button type="button" onclick="document.getElementById('fileinput').click();">Load</button>
+								<input type="file" id="fileinput" hidden />
 							</td>
 						</tr>
 					</table>

@@ -15,6 +15,8 @@ var Graphics = {
 	show_collision: false,
 	// Set to true to draw sprite sheet cells
 	show_cells: false,
+	// Set to true to draw sprite sheet cell numbers
+	show_cellnumber: false,
 
 	// The framerate counter - enable or disable with Graphics.showFPS([true / false])
 	framerate_counter: null,
@@ -70,8 +72,8 @@ var Graphics = {
 		}
 
 		// Draw objects
-		Graphics.context.strokeStyle = "#FFFFFF";
 		Graphics.context.lineWidth = 1;
+		Graphics.context.font = "10px Consolas";
 		let obj;
 		for (obj of Game.objects) {
 			// Draw sprites
@@ -80,14 +82,26 @@ var Graphics = {
 
 				// Draw sprite sheet boxes if enabled
 				if (Graphics.show_cells) {
+					Graphics.context.strokeStyle = "red";
+					Graphics.context.fillStyle = "red";
+					Graphics.context.textAlign = "center";
+
 					if (obj.sprite.sheet && !obj.animation.set) {
-						Graphics.context.strokeStyle = "red";
 						let x, y;
-						for (x = 0; x < obj.sprite.sheet.width; ++x) {
-							for (y = 0; y < obj.sprite.sheet.height; ++y) {
+						let cell = 0;
+						for (y = 0; y < obj.sprite.sheet.height; ++y) {
+							for (x = 0; x < obj.sprite.sheet.width; ++x) {
+
+								// Draw the outline of the cell
 								let dx = obj.x + x * (obj.sprite.width + obj.sprite.sheet.xstride) + obj.sprite.sheet.xoffset - 0.5;
 								let dy = obj.y + y * (obj.sprite.height + obj.sprite.sheet.ystride) + obj.sprite.sheet.yoffset - 0.5;
 								Graphics.context.strokeRect(dx, dy, obj.sprite.width + 1, obj.sprite.height + 1);
+
+								// Draw the cell number
+								if (Graphics.show_cellnumber) {
+									Graphics.context.fillText(cell, dx + obj.sprite.width / 2, dy + obj.sprite.height / 2);
+									cell++;
+								}
 							}
 						}
 					}
@@ -96,6 +110,7 @@ var Graphics = {
 
 			// Draw bounding boxes if enabled
 			if (Graphics.show_collision) {
+				Graphics.context.strokeStyle = "white";
 				if (obj.hitbox) {
 					Graphics.context.globalAlpha = 0.5;
 					Graphics.context.strokeStyle = "white";
@@ -108,7 +123,6 @@ var Graphics = {
 		// Draw the fps counter
 		if (Graphics.framerate_counter) {
 			Graphics.context.textAlign = "left";
-			Graphics.context.font = "10px Consolas";
 			Graphics.context.fillText("FPS  " + Graphics.fps, 2, 10);
 
 			// Increment the fps counter
@@ -129,19 +143,24 @@ var Graphics = {
 
 	// Draw a sprite
 	draw: function (sprite, animation, x, y) {
-		if (sprite.animation) {
-			if (animation.set) {
-				// Animated sprite
-				Graphics.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);
+		if (sprite.image) {
+			if (sprite.animation) {
+				if (animation.set) {
+					// Animated sprite
+					Graphics.context.drawImage(sprite.image, animation.x, animation.y, sprite.width, sprite.height, Math.round(x), Math.round(y), sprite.width, sprite.height);
+				}
+				else {
+					// Full sheet
+					Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.image.width, sprite.image.height);
+				}
 			}
 			else {
-				// Full sheet
-				Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.image.width, sprite.image.height);
+				// Single sprite
+				Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
 			}
-		}
-		else {
-			// Single sprite
-			Graphics.context.drawImage(sprite.image, Math.round(x), Math.round(y), sprite.width, sprite.height);
+		} else {
+			// Draw a box if the sprite image is missing
+			Graphics.context.fillRect(Math.round(x), Math.round(y), sprite.width, sprite.height);
 		}
 	},
 

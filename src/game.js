@@ -65,7 +65,7 @@ var Game = {
 };
 
 var getJSON = function (address, callback) {
-	var xhttp = new XMLHttpRequest();
+	let xhttp = new XMLHttpRequest();
 
 	// Prepare the callback to trigger when the request is complete
 	xhttp.onreadystatechange = function () {
@@ -78,4 +78,25 @@ var getJSON = function (address, callback) {
 	// Send the http request
 	xhttp.open("GET", address, true);
 	xhttp.send();
+}
+
+var saveJSON = function (json, filename) {
+	// Create the file
+	let file = new Blob([JSON.stringify(json)], {type: "application/json"});
+
+	// Insert the file into an anchor element
+	let a = document.createElement("a");
+	let url = URL.createObjectURL(file);
+
+	a.href = url;
+	a.download = filename;
+
+	document.body.appendChild(a);
+
+	// Activate the anchor then remove it
+	a.click();
+	setTimeout(function () {
+		document.body.removeChild(a);
+		window.URL.revokeObjectURL(url);
+	}, 0);
 }

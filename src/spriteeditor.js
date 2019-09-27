@@ -19,9 +19,13 @@ var SpriteEditor = {
 	begin: function () {
 		// Show sprite sheet cells
 		Graphics.show_cells = true;
+		Graphics.show_cellnumber = true;
 
 		// Set the game's main loading system to use the editor version
 		Game.load = SpriteEditor.load;
+
+		// Set up event handlers
+		document.getElementById('fileinput').addEventListener("change", SpriteEditor.loadData);
 
 		// Start the game
 		let canvas = document.getElementById("canvas");
@@ -255,6 +259,7 @@ var SpriteEditor = {
 		}
 	},
 
+	// Change the data of the selected sprite to match the editor data
 	editSprite: function () {
 		if (SpriteEditor.selected_sprite) {
 			// Change the ID
@@ -330,7 +335,14 @@ var SpriteEditor = {
 			}
 
 			// Change the sprite's file
-			SpriteEditor.selected_sprite.file = document.forms["sprites"]["file"].value;
+			if (SpriteEditor.selected_sprite.file != document.forms["sprites"]["file"].value) {
+				// Change the file name
+				SpriteEditor.selected_sprite.file = document.forms["sprites"]["file"].value;
+
+				// Reload image data
+				SpriteEditor.selected_sprite.image = new Image();
+				SpriteEditor.selected_sprite.image.src = Graphics.location + SpriteEditor.selected_sprite.file;
+			}
 
 			// Change size values
 			SpriteEditor.selected_sprite.width = Number(document.forms["sprites"]["width"].value);
@@ -342,6 +354,7 @@ var SpriteEditor = {
 		}
 	},
 
+	// Change the data for the selected animation
 	editAnimation: function () {
 		// Update animation id
 		if (SpriteEditor.selected_animation.id != document.forms["sprites"]["anim_id"].value) {
@@ -360,6 +373,39 @@ var SpriteEditor = {
 		// Update frame data
 		SpriteEditor.selected_animation.start = Number(document.forms["sprites"]["anim_start"].value);
 		SpriteEditor.selected_animation.end = Number(document.forms["sprites"]["anim_end"].value);
+	},
+
+	// Save sprite JSON data to a file
+	saveData: function () {
+		// Load data into a structure readable by the sprite system
+		let data = {
+			location: Graphics.location,
+			sprites: [...Graphics.sprites]
+		};
+
+		// Save the data as a json file
+		saveJSON(data, "graphics.json");
+	},
+
+	// Load sprite JSON data from a selected file
+	loadData: function (e) {
+		let file = e.target.files[0];
+		if (file) {
+			// Prepare the file reader
+			let reader = new FileReader();
+			reader.onload = function () {
+				// Load the json data into the graphics system
+				let json = JSON.parse(reader.result);
+				Graphics.load(json);
+				console.log("Reload from file '" + file.name + "'");
+
+				// Reload the sprite list
+				SpriteEditor.loadSelections();
+			}
+
+			// Read the file
+			reader.readAsText(file);
+		}
 	},
 
 	// Hide unneeded tabs
