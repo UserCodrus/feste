@@ -23,6 +23,10 @@ var Game = {
 		window.addEventListener("keydown", Input.keyPress);
 		window.addEventListener("keyup", Input.keyRelease);
 
+		// Catch gamepad connections
+		window.addEventListener("gamepadconnected", Input.gamepadConnect);
+		window.addEventListener("gamepaddisconnected", Input.gamepadDisconnect);
+
 		// Start the game loop
 		window.requestAnimationFrame(Game.loop);
 	},
@@ -40,6 +44,9 @@ var Game = {
 		// Measure the time change since the last frame
 		let delta = (timestamp - Game.timer) / 1000;
 		Game.timer = timestamp;
+
+		// Update gamepad input
+		Input.gamepadQuery();
 
 		if (Game.ready) {
 			// Update entities

@@ -13,25 +13,25 @@ TestObject.prototype.constructor = TestObject;
 TestObject.prototype.onFrameUpdate = function (delta) {
 	// Set speed
 	let speed = 32 * delta;
-	if (Input.keys[Keyboard.key_shift]) {
+	if (Input.keys[Keyboard.key_shift] || Input.buttons[Gamepad.button_rtrigger]) {
 		speed *= 2;
 	}
 
 	// Horizontal movement
-	if (Input.keys[Keyboard.key_a]) {
+	if (Input.keys[Keyboard.key_a] || Input.buttons[Gamepad.button_dpad_left]) {
 		this.x_velocity = -speed;
 	}
-	else if (Input.keys[Keyboard.key_d]) {
+	else if (Input.keys[Keyboard.key_d] || Input.buttons[Gamepad.button_dpad_right]) {
 		this.x_velocity = speed;
 	}
 	else {
 		this.x_velocity = 0;
 	}
 	// Vertical movement
-	if (Input.keys[Keyboard.key_w]) {
+	if (Input.keys[Keyboard.key_w] || Input.buttons[Gamepad.button_dpad_up]) {
 		this.y_velocity = -speed;
 	}
-	else if (Input.keys[Keyboard.key_s]) {
+	else if (Input.keys[Keyboard.key_s] || Input.buttons[Gamepad.button_dpad_down]) {
 		this.y_velocity = speed;
 	}
 	else {

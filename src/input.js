@@ -3,6 +3,9 @@
 var Input = {
 	// Key states
 	keys: [],
+	buttons: [],
+	axes: [],
+	gamepads: [],
 
 	// Key handlers
 	keyPress: function (e) {
@@ -11,6 +14,84 @@ var Input = {
 	keyRelease: function (e) {
 		Input.keys[e.keyCode] = false;
 	},
+
+	// Gamepad handlers
+	gamepadConnect: function (e) {
+		if (e.gamepad.mapping == "standard") {
+			Input.gamepads[e.gamepad.index] = e.gamepad;
+
+			console.log("Gamepad connected in slot " + e.gamepad.index + ": " + e.gamepad.id);
+		} else {
+			console.log("Unable to connect gamepad in slot " + e.gamepad.index + ": " + e.gamepad.id + " uses nonstandard layout");
+		}
+	},
+	gamepadDisconnect: function (e) {
+		delete Input.gamepads[e.gamepad.index];
+
+		console.log("Gamepad disconnected in slot " + e.gamepad.index + ": " + e.gamepad.id);
+	},
+
+	// Query the state of each gamepad
+	gamepadQuery: function () {
+		// Reset buttons
+		var i, j;
+		for (i = 0; i < Input.buttons.length; i++) {
+			Input.buttons[i] = false;
+		}
+
+		// Check the state of every gamepad connected
+		for (i = 0; i < Input.gamepads.length; i++) {
+			let gp = Input.gamepads[i];
+			if (gp) {
+				// Store the state of the gamepad buttons
+				for (j = 0; j < gp.buttons.length; j++) {
+					if (gp.buttons[j].pressed) {
+						Input.buttons[j] = true;
+					}
+				}
+			}
+		}
+	}
+}
+
+// Gamepad keycodes
+const Gamepad = {
+	// XBox semantics
+	button_a: 0,
+	button_b: 1,
+	button_x: 2,
+	button_y: 3,
+	button_lbutton: 4,
+	button_rbutton: 5,
+	button_ltrigger: 6,
+	button_rtrigger: 7,
+	button_back: 8,
+	button_start: 9,
+
+	// PlayStation semantics
+	button_x: 0,
+	button_circle: 1,
+	button_square: 2,
+	button_triangle: 3,
+	button_l1: 4,
+	button_r1: 5,
+	button_l2: 6,
+	button_r2: 7,
+	button_select: 8,
+	button_start: 9,
+	
+	button_lclick: 10,
+	button_rclick: 11,
+	button_dpad_up: 12,
+	button_dpad_down: 13,
+	button_dpad_left: 14,
+	button_dpad_right: 15,
+	button_center: 16,
+
+	axis_left_x: 0,
+	axis_left_y: 1,
+	axis_right_x: 2,
+	axis_right_y: 3
 }
 
 // Keyboard keycodes
