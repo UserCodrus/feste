@@ -55,33 +55,41 @@ var SpriteEditor = {
 			SpriteEditor.mannequin = new GameObject(0, 0, null, null);
 			SpriteEditor.mannequin.keydown_anim = false;
 			SpriteEditor.mannequin.onFrameUpdate = function (delta) {
-				// Swap between sprite view and animation view
-				if (this.sprite.animation) {
-					if (Input.keys[Keyboard.key_a]) {
-						if (!this.keydown_anim) {
-							// Set the animation for this object
-							if (this.animation.set) {
-								this.setAnimation(null);
-							} else {
-								if (SpriteEditor.selected_animation) {
-									this.setAnimation(SpriteEditor.selected_animation.id);
+				if (this.sprite) {
+					// Swap between sprite view and animation view
+					if (this.sprite.animation) {
+						if (Input.keys[Keyboard.key_a]) {
+							if (!this.keydown_anim) {
+								// Set the animation for this object
+								if (this.animation.set) {
+									this.setAnimation(null);
+								} else {
+									if (SpriteEditor.selected_animation) {
+										this.setAnimation(SpriteEditor.selected_animation.id);
+									}
 								}
+
+								this.keydown_anim = true;
 							}
-
-							this.keydown_anim = true;
+						} else {
+							this.keydown_anim = false;
 						}
-					} else {
-						this.keydown_anim = false;
 					}
-				}
 
-				// Position the mannequin
-				if (!this.sprite.sheet || this.animation.set) {
-					this.x = Graphics.canvas.width / 2 - this.sprite.width / 2;
-					this.y = Graphics.canvas.height / 2 - this.sprite.height / 2;
-				} else {
-					this.x = Graphics.canvas.width / 2 - this.sprite.image.width / 2;
-					this.y = Graphics.canvas.height / 2 - this.sprite.image.height / 2;
+					// Position the mannequin
+					if (!this.sprite.sheet || this.animation.set) {
+						this.x = Graphics.canvas.width / 2 - this.sprite.width / 2;
+						this.y = Graphics.canvas.height / 2 - this.sprite.height / 2;
+					} else {
+						if (this.sprite.image) {
+							this.x = Graphics.canvas.width / 2 - this.sprite.image.width / 2;
+							this.y = Graphics.canvas.height / 2 - this.sprite.image.height / 2;
+						}
+						else {
+							this.x = Graphics.canvas.width / 2 - this.sprite.width / 2;
+							this.y = Graphics.canvas.height / 2 - this.sprite.height / 2;
+						}
+					}
 				}
 			}
 			Game.objects.push(SpriteEditor.mannequin);

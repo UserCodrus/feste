@@ -24,7 +24,7 @@ var Graphics = {
 	fps: 0,
 
 	// The framerate of sprites
-	sprite_fps: 6,
+	sprite_fps: 20,
 
 	// Set to true when the sprite list is loaded
 	ready: false,
